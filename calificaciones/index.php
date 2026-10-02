@@ -1,11 +1,11 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario</title>
-</head>
-<body>
+
+
+
+
+    <?php
+    include "header.php";
+    ?>
+
     <h1>Registro de calificaciones</h1>
 
     <form method="GET" action="calificaciones.php">
@@ -25,6 +25,7 @@
         <button type="submit">ENVIAR</button>
     </form>
 
-    
-</body>
-</html>
+        <?php
+        include "footer.php";
+        ?>
+

@@ -1,0 +1,21 @@
+header {
+        background-color: #333;
+        padding: 20px;
+    }
+
+    nav {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+    }
+
+    nav a {
+        color: white;
+        text-decoration: none;
+        font-family: Arial, sans-serif;
+        font-size: 18px;
+    }
+
+    nav a:hover {
+        color: #00bfff;
+    }
