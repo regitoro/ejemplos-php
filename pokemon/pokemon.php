@@ -1,4 +1,3 @@
-
 <?php
 
 $pokemon = $_GET['pokemon'] ?? "pikachu";
@@ -51,3 +50,6 @@ $datos = json_decode($respuesta, true);
 </body>
 
 </html>
+
+
+https://pokeapi.co/api/v2/pokemon/charizard
