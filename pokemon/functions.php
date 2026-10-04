@@ -5,7 +5,6 @@ const DIR_CACHE = __DIR__ . '/cache/';
 
 
 /**
- * Pide una URL a una API y devuelve el JSON como arreglo.
  * Guarda la respuesta en cache/ para no repetir peticiones.
  * Si algo falla, devuelve null.
  */
@@ -101,7 +100,7 @@ function obtenerEvoluciones(array $especie): array
                 'nombre' => $nodo['species']['name'],
             ];
 
-            // Guardamos sus evoluciones para la siguiente vuelta
+            //guardamos las evoluciones
             foreach ($nodo['evolves_to'] as $hijo) {
                 $siguiente[] = $hijo;
             }
@@ -116,8 +115,7 @@ function obtenerEvoluciones(array $especie): array
 
 
 /**
- * Devuelve un mapa id => lista de tipos, ej. [1 => ['grass', 'poison'], 4 => ['fire']].
- * Hace 18 peticiones (una por tipo); luego todo queda en caché.
+ * mapa id => lista de tipos, ej. [1 => ['grass', 'poison'], 4 => ['fire']].
  */
 function obtenerTiposPorId(): array
 {
@@ -140,8 +138,6 @@ function obtenerTiposPorId(): array
             if ($id > LIMITE_POKEMON) {
                 continue;
             }
-
-            // slot 1 = tipo principal, slot 2 = tipo secundario
             $mapa[$id][(int) $entrada['slot']] = $tipo;
         }
     }
@@ -155,7 +151,6 @@ function obtenerTiposPorId(): array
     return $mapa;
 }
 
-/** Dibuja una pokébola en SVG. */
 function pokeballSvg(): string
 {
     return '<svg class="pokeball" viewBox="0 0 100 100" aria-hidden="true">'

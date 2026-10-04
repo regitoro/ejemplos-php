@@ -3,7 +3,7 @@ require 'functions.php';
 
 const POR_PAGINA = 20;
 
-$iconosTipo = [//para que se mas cool
+$iconosTipo = [//para que se vea mas cool
     'normal' => '⭐', 'fire' => '🔥', 'water' => '💧', 'electric' => '⚡',
     'grass' => '🍃', 'ice' => '❄️', 'fighting' => '🥊', 'poison' => '☠️',
     'ground' => '⛰️', 'flying' => '🕊️', 'psychic' => '🔮', 'bug' => '🐛',
