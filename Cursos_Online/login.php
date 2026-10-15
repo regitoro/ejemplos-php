@@ -46,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             $_SESSION["usuario_id"] = $usuario["id"];
             $_SESSION["nombre"] = $usuario["nombre"];
+            $_SESSION["email"] = $usuario["email"];
             $_SESSION["rol_id"] = $usuario["rol_id"];
 
             // Obtener el nombre del rol
@@ -80,26 +81,35 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Iniciar sesión</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
+<main class="card">
+ 
     <h1>Iniciar sesión</h1>
-
+    <p class="subtitulo">Bienvenido de nuevo a Cursos Online</p>
+ 
     <form method="POST">
-
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="password" required>
-
+ 
+        <div class="campo">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" required>
+        </div>
+ 
+        <div class="campo">
+            <label for="password">Contraseña</label>
+            <input type="password" id="password" name="password" autocomplete="current-password" required>
+        </div>
+ 
         <button type="submit">Entrar</button>
-
+ 
     </form>
-
-    <p><?php echo htmlspecialchars($mensaje); ?></p>
-
-    <a href="registro.php">Crear una cuenta</a>
-
+ 
+    <p class="mensaje"><?php echo htmlspecialchars($mensaje); ?></p>
+ 
+    <p class="enlace-pie">¿No tienes cuenta? <a href="registro.php">Crear una cuenta</a></p>
+ 
+</main>
 </body>
 </html>
+ 

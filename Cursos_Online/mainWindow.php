@@ -7,8 +7,10 @@ if (!isset($_SESSION["usuario_id"])) {
     exit;
 }
 
+$id     = $_SESSION["usuario_id"];
 $nombre = $_SESSION["nombre"] ?? "";
-$rol = strtolower($_SESSION["rol"] ?? "");
+$correo = $_SESSION["correo"] ?? "";
+$rol    = strtolower($_SESSION["rol"] ?? "");
 
 switch ($rol) {
     case "admin":
@@ -34,27 +36,33 @@ switch ($rol) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Panel principal</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-
-    <h1><?php echo htmlspecialchars($saludo); ?></h1>
-    <p>Sesión iniciada como: <?php echo htmlspecialchars($nombre); ?></p>
-
-    <?php if ($rol === "admin"): ?>
-        <!-- Contenido solo para admin -->
-    <?php elseif ($rol === "director"): ?>
-        <!-- Contenido solo para director -->
-    <?php elseif ($rol === "alumno"): ?>
-        <!-- Contenido solo para alumno -->
-    <?php elseif ($rol === "ponente"): ?>
-        <!-- Contenido solo para ponente -->
-    <?php endif; ?>
-
-    <?php if ($rol === "admin"): ?>
-        <p><a href="aprobar_usuarios.php">Aprobar usuarios pendientes</a></p>
-    <?php endif; ?>
-
-    <a href="logout.php">Cerrar sesión</a>
-
+<body class="app">
+<main class="card ancha">
+ 
+    <div class="encabezado">
+        <h1><?php echo htmlspecialchars($saludo); ?></h1>
+        <span class="badge rol"><?php echo htmlspecialchars($rol); ?></span>
+    </div>
+ 
+    <h2>Datos del usuario</h2>
+    <ul class="datos">
+        <li><strong>ID</strong> <span><?php echo htmlspecialchars($id); ?></span></li>
+        <li><strong>Nombre</strong> <span><?php echo htmlspecialchars($nombre); ?></span></li>
+        <li><strong>Correo</strong> <span><?php echo htmlspecialchars($correo); ?></span></li>
+        <li><strong>Rol</strong> <span><?php echo htmlspecialchars($rol); ?></span></li>
+    </ul>
+ 
+    <div class="menu">
+        <?php if ($rol === "admin"): ?>
+            <a href="aprobar_usuarios.php" class="btn">Aprobar usuarios pendientes</a>
+        <?php endif; ?>
+ 
+        <a href="logout.php" class="btn secundario">Cerrar sesión</a>
+    </div>
+ 
+</main>
 </body>
 </html>
+ 

@@ -1,0 +1,443 @@
+/* ==========================================================
+   Cursos Online - Hoja de estilos compartida
+   Cambia los colores en :root para personalizar todo el sitio
+   ========================================================== */
+
+:root {
+    --fondo-1: #4f46e5;
+    --fondo-2: #9333ea;
+    --tarjeta: #ffffff;
+    --texto: #1f2937;
+    --suave: #6b7280;
+    --primario: #4f46e5;
+    --primario-osc: #4338ca;
+    --ok: #16a34a;
+    --ok-osc: #15803d;
+    --peligro: #dc2626;
+    --peligro-osc: #b91c1c;
+    --borde: #e5e7eb;
+    --fondo-suave: #f5f3ff;
+    --radio: 16px;
+    --sombra: 0 25px 50px -12px rgba(30, 27, 75, 0.45);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
+    color: var(--texto);
+    background: linear-gradient(135deg, var(--fondo-1), var(--fondo-2));
+    background-attachment: fixed;
+}
+
+/* Páginas con contenido largo se alinean arriba */
+body.app {
+    align-items: flex-start;
+}
+
+/* ---------- Tarjeta principal ---------- */
+
+.card {
+    width: 100%;
+    max-width: 420px;
+    padding: 40px 36px;
+    background: var(--tarjeta);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+    animation: aparecer 0.45s ease both;
+}
+
+.card.ancha {
+    max-width: 900px;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h1 {
+    font-size: 1.8rem;
+    line-height: 1.2;
+    text-align: center;
+    color: var(--texto);
+}
+
+h2 {
+    margin: 28px 0 12px;
+    font-size: 1.1rem;
+    color: var(--primario);
+}
+
+.subtitulo {
+    margin: 6px 0 26px;
+    text-align: center;
+    color: var(--suave);
+}
+
+/* ---------- Formularios ---------- */
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--texto);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 1rem;
+    font-family: inherit;
+    color: var(--texto);
+    background: #fafafa;
+    border: 1.5px solid var(--borde);
+    border-radius: 10px;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+input:focus {
+    outline: none;
+    background: #fff;
+    border-color: var(--primario);
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.18);
+}
+
+/* ---------- Botones y enlaces ---------- */
+
+button,
+.btn {
+    display: inline-block;
+    padding: 12px 22px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    background: var(--primario);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+}
+
+button:hover,
+.btn:hover {
+    background: var(--primario-osc);
+    box-shadow: 0 8px 18px -8px rgba(79, 70, 229, 0.7);
+}
+
+button:active,
+.btn:active {
+    transform: translateY(1px);
+}
+
+form > .btn,
+form > button {
+    width: 100%;
+}
+
+.btn.secundario {
+    color: var(--texto);
+    background: #eef0f4;
+}
+
+.btn.secundario:hover {
+    background: #e2e5eb;
+    box-shadow: none;
+}
+
+.btn.ok {
+    background: var(--ok);
+}
+
+.btn.ok:hover {
+    background: var(--ok-osc);
+    box-shadow: 0 8px 18px -8px rgba(22, 163, 74, 0.7);
+}
+
+.btn.peligro {
+    background: var(--peligro);
+}
+
+.btn.peligro:hover {
+    background: var(--peligro-osc);
+    box-shadow: 0 8px 18px -8px rgba(220, 38, 38, 0.7);
+}
+
+.btn.pequeno,
+button.pequeno {
+    padding: 7px 14px;
+    font-size: 0.85rem;
+}
+
+a {
+    color: var(--primario);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a.btn,
+a.btn:hover {
+    text-decoration: none;
+}
+
+a.btn:not(.secundario) {
+    color: #fff;
+}
+
+.enlace-pie {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--suave);
+}
+
+/* ---------- Mensajes y avisos ---------- */
+
+.mensaje {
+    margin-top: 18px;
+    padding: 12px 14px;
+    font-size: 0.95rem;
+    color: #3730a3;
+    background: #eef2ff;
+    border-left: 4px solid var(--primario);
+    border-radius: 8px;
+}
+
+/* Si no hay mensaje, no se muestra el recuadro */
+.mensaje:empty {
+    display: none;
+}
+
+.aviso {
+    margin-top: 18px;
+    padding: 14px;
+    font-size: 0.92rem;
+    color: #92400e;
+    background: #fffbeb;
+    border-left: 4px solid #f59e0b;
+    border-radius: 8px;
+    word-break: break-word;
+}
+
+.aviso a {
+    color: #b45309;
+}
+
+/* ---------- Pantallas de estado (pendiente / verificar) ---------- */
+
+.estado {
+    text-align: center;
+}
+
+.icono {
+    width: 76px;
+    height: 76px;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    background: var(--fondo-suave);
+    border-radius: 50%;
+}
+
+.estado p {
+    margin: 12px 0;
+    color: var(--suave);
+}
+
+.estado .mensaje {
+    color: var(--texto);
+}
+
+.estado .btn {
+    margin-top: 14px;
+}
+
+/* ---------- Panel principal ---------- */
+
+.encabezado {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 3px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 999px;
+}
+
+.badge.rol {
+    color: var(--primario);
+    background: var(--fondo-suave);
+}
+
+.badge.si {
+    color: #166534;
+    background: #dcfce7;
+}
+
+.badge.no {
+    color: #991b1b;
+    background: #fee2e2;
+}
+
+.datos {
+    list-style: none;
+    overflow: hidden;
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+}
+
+.datos li {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--borde);
+    word-break: break-word;
+}
+
+.datos li:last-child {
+    border-bottom: none;
+}
+
+.datos li:nth-child(even) {
+    background: #fafafa;
+}
+
+.datos strong {
+    color: var(--suave);
+    font-weight: 600;
+}
+
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 28px;
+}
+
+/* ---------- Tablas ---------- */
+
+.tabla-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.tabla th {
+    padding: 12px 14px;
+    text-align: left;
+    white-space: nowrap;
+    color: #fff;
+    background: var(--primario);
+}
+
+.tabla td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--borde);
+    vertical-align: middle;
+}
+
+.tabla tbody tr:nth-child(even) {
+    background: #fafafa;
+}
+
+.tabla tbody tr:hover {
+    background: var(--fondo-suave);
+}
+
+.tabla tbody tr:last-child td {
+    border-bottom: none;
+}
+
+form.acciones {
+    flex-direction: row;
+    gap: 8px;
+}
+
+form.acciones button {
+    width: auto;
+}
+
+.vacio {
+    padding: 28px;
+    text-align: center;
+    color: var(--suave);
+    background: #fafafa;
+    border-radius: 12px;
+}
+
+/* ---------- Pantallas pequeñas ---------- */
+
+@media (max-width: 600px) {
+    body {
+        padding: 14px;
+    }
+
+    .card {
+        padding: 28px 20px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .datos li {
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    form.acciones {
+        flex-direction: column;
+    }
+}
