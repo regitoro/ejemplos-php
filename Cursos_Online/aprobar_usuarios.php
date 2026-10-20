@@ -26,6 +26,16 @@ if (empty($_SESSION["csrf"])) {
 
 $mensaje = "";
 
+// Obtener roles disponibles, excepto admin
+$sqlRoles = "SELECT id, nombre FROM roles WHERE LOWER(nombre) != 'admin'";
+$rolesDisponibles = $conexion->query($sqlRoles);
+
+$roles = [];
+
+while ($filaRol = $rolesDisponibles->fetch_assoc()) {
+    $roles[] = $filaRol;
+}
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (!hash_equals($_SESSION["csrf"], $_POST["csrf"] ?? "")) {
@@ -39,24 +49,53 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if ($accion === "aceptar") {
 
-            $stmt = $conexion->prepare(
-                "UPDATE usuarios SET aceptado = 1 WHERE id = ?"
+            $rol_id = (int) ($_POST["rol_id"] ?? 0);
+
+            // Comprobar que el rol exista y no sea admin
+            $stmtRol = $conexion->prepare(
+                "SELECT id FROM roles
+                 WHERE id = ? AND LOWER(nombre) != 'admin'"
             );
-            $stmt->bind_param("i", $id);
-            $stmt->execute();
 
-            $mensaje = $stmt->affected_rows > 0
-                ? "Usuario aceptado."
-                : "No se pudo aceptar al usuario.";
+            $stmtRol->bind_param("i", $rol_id);
+            $stmtRol->execute();
 
-            $stmt->close();
+            $resultadoRol = $stmtRol->get_result();
+            $rolValido = $resultadoRol->num_rows > 0;
+
+            $stmtRol->close();
+
+            if (!$rolValido) {
+
+                $mensaje = "El rol seleccionado no es válido.";
+
+            } else {
+
+                // Asignar el rol y aceptar al usuario
+                $stmt = $conexion->prepare(
+                    "UPDATE usuarios
+                     SET rol_id = ?, aceptado = 1
+                     WHERE id = ? AND aceptado = 0"
+                );
+
+                $stmt->bind_param("ii", $rol_id, $id);
+                $stmt->execute();
+
+                $mensaje = $stmt->affected_rows > 0
+                    ? "Usuario aceptado y rol asignado correctamente."
+                    : "No se pudo aceptar al usuario.";
+
+                $stmt->close();
+            }
 
         } elseif ($accion === "rechazar") {
 
-            // Solo se pueden eliminar solicitudes aún pendientes
+            // Solo eliminar solicitudes pendientes
             $stmt = $conexion->prepare(
-                "DELETE FROM usuarios WHERE id = ? AND aceptado = 0"
+                "DELETE FROM usuarios
+                 WHERE id = ? AND aceptado = 0"
             );
+
             $stmt->bind_param("i", $id);
             $stmt->execute();
 
@@ -68,6 +107,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 }
+
+
 
 // Usuarios pendientes de aprobación
 $sql = "SELECT u.id, u.nombre, u.email, u.email_verificado, r.nombre AS rol
@@ -106,18 +147,40 @@ $pendientes = $conexion->query($sql);
                 <tr>
                     <td><?php echo htmlspecialchars($fila["nombre"]); ?></td>
                     <td><?php echo htmlspecialchars($fila["email"]); ?></td>
-                    <td><?php echo htmlspecialchars($fila["rol"]); ?></td>
+                    <td>
+    <select name="rol_id" form="form_<?php echo (int) $fila["id"]; ?>" required>
+        <?php foreach ($roles as $rolDisponible): ?>
+            <option
+                value="<?php echo (int) $rolDisponible["id"]; ?>"
+                <?php echo strtolower($rolDisponible["nombre"]) === "alumno" ? "selected" : ""; ?>
+            >
+                <?php echo htmlspecialchars($rolDisponible["nombre"]); ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+</td>
                     <td><?php echo $fila["email_verificado"] ? "Sí" : "No"; ?></td>
                     <td>
-                        <form method="POST" style="display:inline">
-                            <input type="hidden" name="csrf" value="<?php echo $_SESSION["csrf"]; ?>">
-                            <input type="hidden" name="id" value="<?php echo (int) $fila["id"]; ?>">
-                            <button type="submit" name="accion" value="aceptar">Aceptar</button>
-                            <button type="submit" name="accion" value="rechazar"
-                                    onclick="return confirm('¿Rechazar y eliminar esta solicitud?');">
-                                Rechazar
-                            </button>
-                        </form>
+                        <form method="POST"
+      id="form_<?php echo (int) $fila["id"]; ?>"
+      style="display:inline">
+
+    <input type="hidden" name="csrf"
+           value="<?php echo htmlspecialchars($_SESSION["csrf"]); ?>">
+
+    <input type="hidden" name="id"
+           value="<?php echo (int) $fila["id"]; ?>">
+
+    <button type="submit" name="accion" value="aceptar">
+        Aceptar
+    </button>
+
+    <button type="submit" name="accion" value="rechazar"
+            onclick="return confirm('¿Rechazar y eliminar esta solicitud?');">
+        Rechazar
+    </button>
+
+</form>
                     </td>
                 </tr>
             <?php endwhile; ?>

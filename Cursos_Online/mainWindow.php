@@ -1,5 +1,7 @@
 <?php
 session_start();
+require_once "conexion.php";
+$conexion = conectar();
 
 // Si no hay sesión iniciada, mandar al login
 if (!isset($_SESSION["usuario_id"])) {
@@ -8,28 +10,43 @@ if (!isset($_SESSION["usuario_id"])) {
 }
 
 $id     = $_SESSION["usuario_id"];
+//Obtener solo los datos del usuario logueado
+$sql = "SELECT
+            usuarios.id,
+            usuarios.nombre AS nombre_usuario,
+            usuarios.email,
+            roles.nombre AS nombre_rol
+        FROM usuarios
+        INNER JOIN roles ON usuarios.rol_id = roles.id
+        WHERE usuarios.id = ?";
+
+$stmt = $conexion->prepare($sql);
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$fila = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+// Si el usuario ya no existe, cerrar la sesión
+if (!$fila) {
+    session_destroy();
+    header("Location: login.php");
+    exit;
+}
+
 $nombre = $_SESSION["nombre"] ?? "";
-$correo = $_SESSION["correo"] ?? "";
+$email = $_SESSION["email"] ?? "";
 $rol    = strtolower($_SESSION["rol"] ?? "");
 
-switch ($rol) {
-    case "admin":
-        $saludo = "Hola admin";
-        break;
-    case "director":
-        $saludo = "Hola director";
-        break;
-    case "alumno":
-        $saludo = "Hola alumno";
-        break;
-    case "ponente":
-        $saludo = "Hola ponente";
-        break;
-    default:
-        $saludo = "Hola";
-        break;
-}
+// saludo según el rol
+$saludos = [
+    "admin"   => "Hola admin",
+    "director" => "Hola director",
+    "alumno"  => "Hola alumno",
+    "ponente" => "Hola ponente",
+];
+$saludo = $saludos[$rol] ?? "Hola";
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -50,7 +67,7 @@ switch ($rol) {
     <ul class="datos">
         <li><strong>ID</strong> <span><?php echo htmlspecialchars($id); ?></span></li>
         <li><strong>Nombre</strong> <span><?php echo htmlspecialchars($nombre); ?></span></li>
-        <li><strong>Correo</strong> <span><?php echo htmlspecialchars($correo); ?></span></li>
+        <li><strong>Correo</strong> <span><?php echo htmlspecialchars($email); ?></span></li>
         <li><strong>Rol</strong> <span><?php echo htmlspecialchars($rol); ?></span></li>
     </ul>
  

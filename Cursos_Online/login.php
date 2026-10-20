@@ -1,6 +1,6 @@
 <?php
 session_start();
-include_once "conexion.php";
+require_once "conexion.php";
 
 $conexion = conectar();
 
@@ -8,23 +8,24 @@ $mensaje = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    $email = trim($_POST["email"]);
-    $password = $_POST["password"];
+    $email = trim($_POST["email"] ?? "");
+    $password = $_POST["password"] ?? "";
 
-    // Buscar al usuario por su correo
-    $sql = "SELECT * FROM usuarios WHERE email = ?";
+    // Buscar al usuario por su correo, junto con el nombre de su rol
+    $sql = "SELECT usuarios.*, roles.nombre AS nombre_rol
+            FROM usuarios
+            INNER JOIN roles ON usuarios.rol_id = roles.id
+            WHERE usuarios.email = ?";
 
     $stmt = $conexion->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
-
     $resultado = $stmt->get_result();
 
     if ($resultado->num_rows === 1) {
 
         $usuario = $resultado->fetch_assoc();
 
-        // Comprobar la contraseña
         if (!password_verify($password, $usuario["password"])) {
 
             $mensaje = "Correo o contraseña incorrectos.";
@@ -45,23 +46,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             session_regenerate_id(true);
 
             $_SESSION["usuario_id"] = $usuario["id"];
-            $_SESSION["nombre"] = $usuario["nombre"];
-            $_SESSION["email"] = $usuario["email"];
-            $_SESSION["rol_id"] = $usuario["rol_id"];
+            $_SESSION["nombre"]     = $usuario["nombre"];
+            $_SESSION["email"]      = $usuario["email"];
+            $_SESSION["rol_id"]     = $usuario["rol_id"];
+            $_SESSION["rol"]        = $usuario["nombre_rol"];
 
-            // Obtener el nombre del rol
-            $sqlRol = "SELECT nombre FROM roles WHERE id = ?";
-            $stmtRol = $conexion->prepare($sqlRol);
-            $stmtRol->bind_param("i", $usuario["rol_id"]);
-            $stmtRol->execute();
-
-            $resultadoRol = $stmtRol->get_result();
-
-            if ($filaRol = $resultadoRol->fetch_assoc()) {
-                $_SESSION["rol"] = $filaRol["nombre"];
-            }
-
-            // Redirigir al panel principal
             header("Location: mainWindow.php");
             exit;
         }
@@ -69,12 +58,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } else {
 
         $mensaje = "Correo o contraseña incorrectos.";
-
     }
 
     $stmt->close();
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>

@@ -3,6 +3,9 @@ include_once "conexion.php";
    $conexion = conectar();
 
 $mensaje = "";
+$registrado = false;
+$enlaceVerificacion = "";
+
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
@@ -42,15 +45,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         );
 
         if ($stmt->execute()) {
-
+            $registrado = true;
             $mensaje = "Usuario registrado correctamente. Tu cuenta está pendiente de aprobación.";
-
-            echo "<p>
-                    Para confirmar tu correo:
-                    <a href='verificar.php?token=" . urlencode($token) . "'>
-                        Confirmar email
-                    </a>
-                  </p>";
+            $enlaceVerificacion = "verificar.php?token=" . urlencode($token);
 
         } else {
 
@@ -78,42 +75,38 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </head>
 <body>
 <main class="card">
- 
     <h1>Registro de alumnos</h1>
-    <p class="subtitulo">Crea tu cuenta para entrar a Cursos Online</p>
- 
-    <form method="POST">
- 
-        <div class="campo">
-            <label for="nombre">Nombre</label>
-            <input type="text" id="nombre" name="nombre" autocomplete="name" required>
-        </div>
- 
-        <div class="campo">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" autocomplete="email" required>
-        </div>
- 
-        <div class="campo">
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" name="password" autocomplete="new-password" required>
-        </div>
- 
-        <button type="submit">Registrarse</button>
- 
-    </form>
- 
-    <p class="mensaje"><?php echo htmlspecialchars($mensaje); ?></p>
- 
-    <?php if ($enlaceVerificacion !== ""): ?>
+
+    <?php if (!$registrado): ?>
+
+        <p class="subtitulo">Crea tu cuenta para entrar a Cursos Online</p>
+        <form method="POST">
+            <div class="campo">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" autocomplete="name" required>
+            </div>
+            <div class="campo">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" autocomplete="email" required>
+            </div>
+            <div class="campo">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" autocomplete="new-password" required>
+            </div>
+            <button type="submit">Registrarse</button>
+        </form>
+        <p class="mensaje"><?php echo htmlspecialchars($mensaje); ?></p>
+        <p class="enlace-pie">¿Ya tienes cuenta? <a href="login.php">Iniciar sesión</a></p>
+
+    <?php else: ?>
+
+        <p class="mensaje"><?php echo htmlspecialchars($mensaje); ?></p>
         <div class="aviso">
             Para confirmar tu correo:
             <a href="<?php echo htmlspecialchars($enlaceVerificacion); ?>">Confirmar email</a>
         </div>
+
     <?php endif; ?>
- 
-    <p class="enlace-pie">¿Ya tienes cuenta? <a href="login.php">Iniciar sesión</a></p>
- 
 </main>
 </body>
 </html>
