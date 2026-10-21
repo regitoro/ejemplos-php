@@ -37,6 +37,11 @@ $nombre = $_SESSION["nombre"] ?? "";
 $email = $_SESSION["email"] ?? "";
 $rol    = strtolower($_SESSION["rol"] ?? "");
 
+if ($rol === "admin") {
+    header("Location: Admin/admin.php");
+    exit;
+}
+
 // saludo según el rol
 $saludos = [
     "admin"   => "Hola admin",
@@ -72,9 +77,11 @@ $saludo = $saludos[$rol] ?? "Hola";
     </ul>
  
     <div class="menu">
-        <?php if ($rol === "admin"): ?>
+        <!-- <?php 
+        //if ($rol === "admin") ?>
             <a href="aprobar_usuarios.php" class="btn">Aprobar usuarios pendientes</a>
-        <?php endif; ?>
+        <?php 
+    //endif; ?> -->
  
         <a href="logout.php" class="btn secundario">Cerrar sesión</a>
     </div>
