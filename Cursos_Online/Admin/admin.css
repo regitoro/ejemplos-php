@@ -483,3 +483,5 @@ details.editar[open] { padding-bottom: 8px; }
 }
 
 .lista-avisos { margin: 0 0 12px 20px; color: #92400e; }
+
+.mini-enlace { padding: 6px 10px; font-size: 0.85rem; border-radius: 8px; }

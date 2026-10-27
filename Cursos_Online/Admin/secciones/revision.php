@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . "/../../contenido.php";
+
 $mensajes = [
     "curso_aprobado"       => ["ok",    "Curso aprobado. El director ya puede publicarlo."],
     "cambios_pedidos"      => ["ok",    "Curso devuelto al director con tus comentarios."],
@@ -56,6 +58,8 @@ if (count($cursos) > 0) {
 
 <?php endif; ?>
 
+<link rel="stylesheet" href="../contenido.css">
+
 <?php foreach ($cursos as $c):
     $bloques = $estructura[(int) $c["id"]] ?? [];
     $totalLecciones = 0;
@@ -106,9 +110,9 @@ if (count($cursos) > 0) {
                     <?php foreach ($b["subs"] as $s): ?>
                         <details class="estructura-sub">
                             <summary>• <?php echo htmlspecialchars($s["titulo"]); ?></summary>
-                            <div class="al-contenido">
+                            <div class="al-contenido contenido-leccion">
                                 <?php echo trim((string) $s["contenido"]) !== ""
-                                    ? nl2br(htmlspecialchars($s["contenido"]))
+                                    ? htmlParaMostrar($s["contenido"])
                                     : "<em>Sin contenido.</em>"; ?>
                             </div>
                         </details>

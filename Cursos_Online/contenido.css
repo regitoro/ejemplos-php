@@ -1,0 +1,56 @@
+/* usado por la pagina de lectura y la revision del admin */
+
+.contenido-leccion {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: #1f2937;
+    overflow-wrap: anywhere;
+}
+.contenido-leccion > :first-child { margin-top: 0; }
+
+.contenido-leccion p { margin: 0 0 1em; }
+
+.contenido-leccion h1 { font-size: 2rem;   line-height: 1.25; margin: 1.6em 0 0.6em; }
+.contenido-leccion h2 { font-size: 1.6rem; line-height: 1.3;  margin: 1.5em 0 0.5em; }
+.contenido-leccion h3 { font-size: 1.3rem; line-height: 1.35; margin: 1.4em 0 0.5em; }
+
+.contenido-leccion ul,
+.contenido-leccion ol { margin: 0 0 1em; padding-left: 1.6em; }
+.contenido-leccion ul { list-style: disc; }
+.contenido-leccion ol { list-style: decimal; }
+.contenido-leccion li { margin: 0.3em 0; }
+
+.contenido-leccion blockquote {
+    margin: 1.2em 0;
+    padding: 0.7em 1.1em;
+    border-left: 4px solid #a5b4fc;
+    background: #f5f3ff;
+    border-radius: 0 10px 10px 0;
+    color: #4b5563;
+}
+
+.contenido-leccion pre {
+    margin: 1.2em 0;
+    padding: 1em 1.2em;
+    background: #111827;
+    color: #e5e7eb;
+    border-radius: 10px;
+    overflow-x: auto;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+.contenido-leccion code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; }
+
+.contenido-leccion a { color: #4f46e5; text-decoration: underline; }
+
+.contenido-leccion img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 1.2em auto;
+    border-radius: 10px;
+}
+
+.contenido-leccion .ql-align-center  { text-align: center; }
+.contenido-leccion .ql-align-right   { text-align: right; }
+.contenido-leccion .ql-align-justify { text-align: justify; }

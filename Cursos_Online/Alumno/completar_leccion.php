@@ -52,5 +52,9 @@ if (!$borrada) {
     $stmt->close();
 }
 
-header("Location: curso.php?id=" . (int) $datos["curso_id"] . "#l" . $subbloque_id);
+$destino = (($_POST["volver"] ?? "") === "leccion")
+    ? "leccion.php?id=" . $subbloque_id
+    : "curso.php?id=" . (int) $datos["curso_id"] . "#l" . $subbloque_id;
+
+header("Location: " . $destino);
 exit;

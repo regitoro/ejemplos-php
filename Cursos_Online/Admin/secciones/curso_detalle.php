@@ -497,6 +497,16 @@ function botonesMover(string $tipo, int $id): void {
                     <div class="fila-item">
                         <span class="titulo-item">• <?php echo htmlspecialchars($s["titulo"]); ?></span>
                         <div class="controles">
+
+
+                        <?php if (trim((string) $s["contenido"]) === ""): ?>
+    <span class="etiqueta estado-borrador">Sin contenido</span>
+<?php endif; ?>
+<a class="btn-principal mini-enlace"
+   href="../editor_leccion.php?id=<?php echo (int) $s["id"]; ?>">Editar contenido</a>
+
+
+
                             <?php botonesMover("subbloque", (int) $s["id"]); ?>
                             <form method="POST" action="acciones_bloques.php"
                                   onsubmit="return confirm('¿Eliminar este subbloque?');">
@@ -508,25 +518,14 @@ function botonesMover(string $tipo, int $id): void {
                     </div>
 
                     <details class="editar">
-                        <summary>Editar subbloque</summary>
-                        <form method="POST" action="acciones_bloques.php" class="formulario">
+                        <summary>Renombrar lección</summary>
+                        <form method="POST" action="acciones_bloques.php" class="form-linea">
                             <input type="hidden" name="accion" value="editar_subbloque">
                             <input type="hidden" name="id" value="<?php echo (int) $s["id"]; ?>">
-                            <div class="campo-admin">
-                                <label>Título</label>
-                                <input type="text" name="titulo" maxlength="150" required
-                                       value="<?php echo htmlspecialchars($s["titulo"]); ?>">
-                            </div>
-                            <div class="campo-admin">
-                                <label>Contenido</label>
-                                <textarea name="contenido" rows="4"><?php
-                                    echo htmlspecialchars($s["contenido"] ?? "");
-                                ?></textarea>
-                            </div>
-                            <div class="acciones-form">
-                                <button type="submit" class="btn-principal">Guardar</button>
-                            </div>
-                        </form>
+                            <input type="text" name="titulo" maxlength="150" required
+                                value="<?php echo htmlspecialchars($s["titulo"]); ?>">
+                            <button type="submit" class="btn-principal">Guardar</button>
+                            </form>
                     </details>
                 </div>
             <?php endforeach; ?>

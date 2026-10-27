@@ -144,8 +144,8 @@ switch ($accion) {
         if (!$tituloOk) { $msg = "datos_invalidos"; break; }
         $orden = siguienteOrden($conexion, "subbloques", "bloque_id", $bloqueId);
         ejecutar($conexion,
-                 "INSERT INTO subbloques (bloque_id, titulo, contenido, orden) VALUES (?, ?, ?, ?)",
-                 "issi", $bloqueId, $titulo, $contenido, $orden);
+                 "INSERT INTO subbloques (bloque_id, titulo, orden) VALUES (?, ?, ?)",
+                 "isi", $bloqueId, $titulo, $orden);
         $msg = "sub_creado";
         break;
 
@@ -153,8 +153,8 @@ switch ($accion) {
         $cursoId = cursoDeSubbloque($conexion, $id);
         if (!$cursoId) break;
         if (!$tituloOk) { $msg = "datos_invalidos"; break; }
-        ejecutar($conexion, "UPDATE subbloques SET titulo = ?, contenido = ? WHERE id = ?",
-                 "ssi", $titulo, $contenido, $id);
+        ejecutar($conexion, "UPDATE subbloques SET titulo = ? WHERE id = ?",
+                 "si", $titulo, $id);
         $msg = "sub_actualizado";
         break;
 

@@ -114,24 +114,19 @@ $stmt->close();
         <h3 class="al-bloque"><?php echo htmlspecialchars($l["bloque"]); ?></h3>
     <?php endif; ?>
 
-        <div class="leccion <?php echo $l["completada"] ? 'hecha' : ''; ?>" id="l<?php echo (int) $l["id"]; ?>">
-            <form method="POST" action="completar_leccion.php">
-                <input type="hidden" name="subbloque_id" value="<?php echo (int) $l["id"]; ?>">
-                <button type="submit" class="check"
-                        title="<?php echo $l["completada"] ? 'Desmarcar lección' : 'Marcar como completada'; ?>">
-                    <?php echo $l["completada"] ? "✔" : ""; ?>
-                </button>
-            </form>
+    <div class="leccion <?php echo $l["completada"] ? 'hecha' : ''; ?>" id="l<?php echo (int) $l["id"]; ?>">
+    <form method="POST" action="completar_leccion.php">
+        <input type="hidden" name="subbloque_id" value="<?php echo (int) $l["id"]; ?>">
+        <button type="submit" class="check"
+                title="<?php echo $l["completada"] ? 'Desmarcar lección' : 'Marcar como completada'; ?>">
+            <?php echo $l["completada"] ? "✔" : ""; ?>
+        </button>
+    </form>
 
-            <details class="al-detalle">
-                <summary><?php echo htmlspecialchars($l["titulo"]); ?></summary>
-                <div class="al-contenido">
-                    <?php echo $l["contenido"] !== null && trim($l["contenido"]) !== ""
-                        ? nl2br(htmlspecialchars($l["contenido"]))
-                        : "<em>Esta lección todavía no tiene contenido.</em>"; ?>
-                </div>
-            </details>
-        </div>
+    <a class="al-leccion-enlace" href="leccion.php?id=<?php echo (int) $l["id"]; ?>">
+        <?php echo htmlspecialchars($l["titulo"]); ?>
+    </a>
+</div>
 
     <?php endforeach; ?>
 
