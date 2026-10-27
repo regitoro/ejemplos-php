@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once "conexion.php";
+require_once __DIR__ . "/../conexion.php";
 
 if (!isset($_SESSION["usuario_id"]) || $_SERVER["REQUEST_METHOD"] !== "POST") {
-    header("Location: login.php");
+    header("Location: ../login.php");
     exit;
 }
 
@@ -16,6 +16,7 @@ $subbloque_id = (int) ($_POST["subbloque_id"] ?? 0);
 $sql = "SELECT i.id AS inscripcion_id, b.curso_id
         FROM subbloques s
         INNER JOIN bloques b ON s.bloque_id = b.id
+        INNER JOIN cursos c ON c.id = b.curso_id AND c.estado <> 'borrador'
         INNER JOIN inscripciones i ON i.curso_id = b.curso_id AND i.usuario_id = ?
         WHERE s.id = ?";
 $stmt = $conexion->prepare($sql);
@@ -28,6 +29,8 @@ if (!$datos) {
     header("Location: mainWindow.php");   // no está inscrito o la lección no existe
     exit;
 }
+
+
 
 $inscripcion_id = (int) $datos["inscripcion_id"];
 
@@ -49,5 +52,5 @@ if (!$borrada) {
     $stmt->close();
 }
 
-header("Location: curso_alumno.php?id=" . (int) $datos["curso_id"]);
+header("Location: curso.php?id=" . (int) $datos["curso_id"] . "#l" . $subbloque_id);
 exit;

@@ -1,16 +1,20 @@
-<!-- Valida los datos en el servidor: nombre obligatorio, estado dentro de la lista permitida, fechas válidas y fecha de fin no anterior a la de inicio. -->
- <?php
+<?php
 session_start();
 require_once __DIR__ . "/../conexion.php";
+require_once __DIR__ . "/../permisos.php";
 
-// Solo el admin, y solo por POST
-if (!isset($_SESSION["usuario_id"]) || strtolower($_SESSION["rol"] ?? "") !== "admin"
+$rol = strtolower($_SESSION["rol"] ?? "");
+$uid = (int) ($_SESSION["usuario_id"] ?? 0);
+
+// Solo admin o director, y solo por POST
+if ($uid === 0 || !in_array($rol, ["admin", "director"], true)
     || $_SERVER["REQUEST_METHOD"] !== "POST") {
     header("Location: ../login.php");
     exit;
 }
 
 $conexion = conectar();
+$panel    = $rol === "director" ? "director.php" : "admin.php";
 
 // Convierte "" en NULL y valida el formato AAAA-MM-DD. Devuelve false si es inválida.
 function fechaValida(string $valor) {
@@ -21,9 +25,10 @@ function fechaValida(string $valor) {
     return ($d && $d->format("Y-m-d") === $valor) ? $valor : false;
 }
 
-$accion = $_POST["accion"] ?? "";
-$id     = (int) ($_POST["id"] ?? 0);
-$msg    = "error";
+$accion    = $_POST["accion"] ?? "";
+$id        = (int) ($_POST["id"] ?? 0);
+$msg       = "error";
+$irAlCurso = 0;      // si es > 0, se vuelve a la pantalla de gestión de ese curso
 
 if ($accion === "guardar") {
 
@@ -35,7 +40,7 @@ if ($accion === "guardar") {
 
     $estadosPermitidos = ["borrador", "activo", "finalizado"];
 
-    if ($nombre === "" || mb_strlen($nombre) > 150
+    if ($nombre === "" || strlen($nombre) > 150
         || !in_array($estado, $estadosPermitidos, true)
         || $inicio === false || $fin === false
         || ($inicio !== null && $fin !== null && $fin < $inicio)) {
@@ -44,13 +49,35 @@ if ($accion === "guardar") {
 
     } elseif ($id > 0) {
 
+        if (!puedeEditarCurso($conexion, $id, $rol, $uid)) {
+            $msg = "sin_permiso";
+        } elseif ($rol === "director" && $estado !== "borrador" && !cursoAprobado($conexion, $id)) {
+            // Un director no puede sacar de borrador un curso que no está aprobado
+            $msg = "no_aprobado";
+        } else {
+            $stmt = $conexion->prepare(
+                "UPDATE cursos
+                 SET nombre = ?, descripcion = ?, fecha_inicio = ?, fecha_fin = ?, estado = ?
+                 WHERE id = ?"
+            );
+            $stmt->bind_param("sssssi", $nombre, $descripcion, $inicio, $fin, $estado, $id);
+            $msg = $stmt->execute() ? "actualizado" : "error";
+            $stmt->close();
+        }
+
+    } elseif ($rol === "director") {
+
+        // El curso nace en borrador, asignado al director y sin enviar a revisión
         $stmt = $conexion->prepare(
-            "UPDATE cursos
-             SET nombre = ?, descripcion = ?, fecha_inicio = ?, fecha_fin = ?, estado = ?
-             WHERE id = ?"
+            "INSERT INTO cursos
+                 (nombre, descripcion, fecha_inicio, fecha_fin, estado, director_id, aprobacion)
+             VALUES (?, ?, ?, ?, 'borrador', ?, 'sin_enviar')"
         );
-        $stmt->bind_param("sssssi", $nombre, $descripcion, $inicio, $fin, $estado, $id);
-        $msg = $stmt->execute() ? "actualizado" : "error";
+        $stmt->bind_param("ssssi", $nombre, $descripcion, $inicio, $fin, $uid);
+        if ($stmt->execute()) {
+            $msg       = "creado";
+            $irAlCurso = $stmt->insert_id;   // para que agregue bloques enseguida
+        }
         $stmt->close();
 
     } else {
@@ -66,12 +93,94 @@ if ($accion === "guardar") {
 
 } elseif ($accion === "eliminar" && $id > 0) {
 
-    $stmt = $conexion->prepare("DELETE FROM cursos WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $msg = $stmt->affected_rows > 0 ? "eliminado" : "error";
-    $stmt->close();
+    if (!puedeEditarCurso($conexion, $id, $rol, $uid)) {
+        $msg = "sin_permiso";
+    } else {
+        // El admin borra cualquiera; el director solo cursos en borrador
+        $esAdmin = $rol === "admin" ? 1 : 0;
+        $stmt = $conexion->prepare(
+            "DELETE FROM cursos WHERE id = ? AND (? = 1 OR estado = 'borrador')"
+        );
+        $stmt->bind_param("ii", $id, $esAdmin);
+        $stmt->execute();
+        $msg = $stmt->affected_rows > 0 ? "eliminado" : "no_eliminar";
+        $stmt->close();
+    }
+
+} elseif ($accion === "enviar_revision" && $id > 0) {
+
+    $irAlCurso = $id;
+
+    if ($rol !== "director" || !puedeEditarCurso($conexion, $id, $rol, $uid)) {
+        $msg = "sin_permiso";
+    } else {
+        // Debe tener al menos una lección
+        $stmt = $conexion->prepare(
+            "SELECT COUNT(*) AS n FROM subbloques s
+             INNER JOIN bloques b ON s.bloque_id = b.id
+             WHERE b.curso_id = ?"
+        );
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $lecciones = (int) $stmt->get_result()->fetch_assoc()["n"];
+        $stmt->close();
+
+        if ($lecciones === 0) {
+            $msg = "revision_vacio";
+        } else {
+            $stmt = $conexion->prepare(
+                "UPDATE cursos
+                SET aprobacion = 'en_revision', revision_comentario = NULL, enviado_en = NOW()
+                WHERE id = ? AND director_id = ?
+                AND aprobacion IN ('sin_enviar', 'rechazado')"
+            );
+            $stmt->bind_param("ii", $id, $uid);
+            $stmt->execute();
+            $msg = $stmt->affected_rows > 0 ? "enviado_revision" : "error";
+            $stmt->close();
+        }
+    }
+
+} elseif ($accion === "retirar_revision" && $id > 0) {
+
+    $irAlCurso = $id;
+
+    if ($rol !== "director") {
+        $msg = "sin_permiso";
+    } else {
+        $stmt = $conexion->prepare(
+            "UPDATE cursos SET aprobacion = 'sin_enviar'
+             WHERE id = ? AND director_id = ? AND aprobacion = 'en_revision'"
+        );
+        $stmt->bind_param("ii", $id, $uid);
+        $stmt->execute();
+        $msg = $stmt->affected_rows > 0 ? "revision_retirada" : "error";
+        $stmt->close();
+    }
+
+} elseif ($accion === "publicar" && $id > 0) {
+
+    $irAlCurso = $id;
+
+    if (!puedeEditarCurso($conexion, $id, $rol, $uid)) {
+        $msg = "sin_permiso";
+    } else {
+        // Solo se publica un curso aprobado que siga en borrador
+        $stmt = $conexion->prepare(
+            "UPDATE cursos SET estado = 'activo'
+             WHERE id = ? AND aprobacion = 'aprobado' AND estado = 'borrador'"
+        );
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        $msg = $stmt->affected_rows > 0 ? "publicado" : "no_aprobado";
+        $stmt->close();
+    }
 }
 
-header("Location: admin.php?seccion=cursos&msg=" . $msg);
+$destino = $panel . "?seccion=cursos";
+if ($irAlCurso > 0) {
+    $destino .= "&gestionar=" . $irAlCurso;
+}
+
+header("Location: " . $destino . "&msg=" . $msg);
 exit;

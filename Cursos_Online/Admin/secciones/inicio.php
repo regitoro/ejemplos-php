@@ -17,6 +17,14 @@ $pendientes = $conexion->query(
     "SELECT COUNT(*) AS n FROM usuarios WHERE aceptado = 0"
 )->fetch_assoc()["n"];
 
+$solPendientes = $conexion->query(
+    "SELECT COUNT(*) AS n FROM solicitudes_inscripcion WHERE estado = 'pendiente'"
+)->fetch_assoc()["n"];
+
+$cursosRevision = $conexion->query(
+    "SELECT COUNT(*) AS n FROM cursos WHERE aprobacion = 'en_revision'"
+)->fetch_assoc()["n"];
+
 // ---------- Cursos con alumnos y progreso ----------
 $sql = "SELECT c.id, c.nombre, c.estado, c.fecha_inicio,
             (SELECT COUNT(*) FROM inscripciones i
@@ -56,6 +64,16 @@ foreach ($cursos as $c) {
         <span class="numero"><?php echo (int) $pendientes; ?></span>
         <span class="etiqueta-dato">Solicitudes pendientes</span>
     </a>
+    <a class="tarjeta dato enlace-tarjeta" href="admin.php?seccion=inscripciones">
+        <span class="numero"><?php echo (int) $solPendientes; ?></span>
+        <span class="etiqueta-dato">Inscripciones pendientes</span>
+    </a>
+    <a class="tarjeta dato enlace-tarjeta" href="admin.php?seccion=revision">
+        <span class="numero"><?php echo (int) $cursosRevision; ?></span>
+        <span class="etiqueta-dato">Cursos en revisión</span>
+    </a>
+
+    
 </div>
 
 <?php if (count($cursos) === 0): ?>

@@ -1,0 +1,1 @@
+<?php require __DIR__ . "/../Admin/acciones_bloques.php";

@@ -1,20 +1,32 @@
 <?php
 session_start();
-require_once __DIR__ . "/../conexion.php"; 
+require_once __DIR__ . "/../conexion.php";
+require_once __DIR__ . "/../permisos.php";
 
-// Solo el admin puede entrar aquí
-if (!isset($_SESSION["usuario_id"]) || strtolower($_SESSION["rol"] ?? "") !== "admin") {
-    header("Location: ../login.php"); 
+if (!isset($_SESSION["usuario_id"])) {
+    header("Location: ../login.php");
     exit;
 }
 
 $conexion = conectar();
+sincronizarRol($conexion);
+
+// Solo el admin puede entrar aquí (si cambió de rol, mainWindow lo manda a su panel)
+if (strtolower($_SESSION["rol"] ?? "") !== "admin") {
+    header("Location: ../mainWindow.php");
+    exit;
+}
+
+$enRevision = (int) $conexion->query(
+    "SELECT COUNT(*) AS n FROM cursos WHERE aprobacion = 'en_revision'"
+)->fetch_assoc()["n"];
 
 // Secciones permitidas (lista blanca) con su texto e ícono
 $secciones = [
     "inicio"     => ["Inicio",     "🏠"],
     "cursos"     => ["Cursos",     "📚"],
-    "calendario" => ["Calendario", "📅"],
+    "revision"      => ["Revisión de cursos", "✅"],
+    "inscripciones" => ["Inscripciones", "📅"],
     "usuarios"   => ["Usuarios",   "👥"],
     "perfil"     => ["Perfil",     "👤"],
 ];
@@ -41,9 +53,12 @@ if (!isset($secciones[$seccion])) {
         <nav class="menu-lateral">
             <?php foreach ($secciones as $clave => [$texto, $icono]): ?>
                 <a href="admin.php?seccion=<?php echo $clave; ?>"
-                   class="<?php echo $clave === $seccion ? 'activo' : ''; ?>">
+                    class="<?php echo $clave === $seccion ? 'activo' : ''; ?>">
                     <span class="icono"><?php echo $icono; ?></span>
                     <?php echo $texto; ?>
+                    <?php if ($clave === "revision" && $enRevision > 0): ?>
+                        <span class="insignia"><?php echo $enRevision; ?></span>
+                    <?php endif; ?>
                 </a>
             <?php endforeach; ?>
         </nav>
