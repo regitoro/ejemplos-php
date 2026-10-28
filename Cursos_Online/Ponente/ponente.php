@@ -10,16 +10,41 @@ if (!isset($_SESSION["usuario_id"])) {
 
 $conexion = conectar();
 sincronizarRol($conexion);
+if (empty($_SESSION["csrf_preguntas"])) {
+    $_SESSION["csrf_preguntas"] = bin2hex(random_bytes(32));
+}
 
 if (strtolower($_SESSION["rol"] ?? "") !== "ponente") {
     header("Location: ../mainWindow.php");
     exit;
 }
 
+$ponenteId = (int) $_SESSION["usuario_id"];
+$stmt = $conexion->prepare(
+    "SELECT COUNT(*) AS n FROM preguntas_ponente
+     WHERE ponente_id = ? AND estado = 'pendiente'"
+);
+$stmt->bind_param("i", $ponenteId);
+$stmt->execute();
+$preguntasPendientes = (int) $stmt->get_result()->fetch_assoc()["n"];
+$stmt->close();
+$stmt = $conexion->prepare(
+    "SELECT COUNT(*) AS n FROM entregas_ejercicios ee
+     INNER JOIN ejercicios e ON e.id = ee.ejercicio_id
+     INNER JOIN curso_ponentes cp ON cp.curso_id = e.curso_id
+     WHERE cp.usuario_id = ? AND ee.puntuacion IS NULL"
+);
+$stmt->bind_param("i", $ponenteId);
+$stmt->execute();
+$ejerciciosPendientes = (int) $stmt->get_result()->fetch_assoc()["n"];
+$stmt->close();
+
 // Secciones permitidas (lista blanca) con su texto e ícono
 $secciones = [
     "inicio" => ["Inicio",    "🏠"],
     "cursos" => ["Mis cursos", "📚"],
+    "preguntas" => ["Preguntas", "❓"],
+    "calificar_ejercicios" => ["Calificar ejercicios", "📝"],
     "usuarios" => ["Usuarios",   "👥"],
     "perfil" => ["Perfil",    "👤"],
 ];
@@ -49,6 +74,12 @@ if (!isset($secciones[$seccion])) {
                    class="<?php echo $clave === $seccion ? 'activo' : ''; ?>">
                     <span class="icono"><?php echo $icono; ?></span>
                     <?php echo $texto; ?>
+                    <?php if ($clave === "preguntas" && $preguntasPendientes > 0): ?>
+                        <span class="insignia"><?php echo $preguntasPendientes; ?></span>
+                    <?php endif; ?>
+                    <?php if ($clave === "calificar_ejercicios" && $ejerciciosPendientes > 0): ?>
+                        <span class="insignia"><?php echo $ejerciciosPendientes; ?></span>
+                    <?php endif; ?>
                 </a>
             <?php endforeach; ?>
         </nav>

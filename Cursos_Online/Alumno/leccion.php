@@ -17,6 +17,9 @@ sincronizarRol($conexion);
 $rol   = strtolower($_SESSION["rol"] ?? "");
 $uid   = (int) $_SESSION["usuario_id"];
 $subId = (int) ($_GET["id"] ?? 0);
+if (empty($_SESSION["csrf_preguntas"])) {
+    $_SESSION["csrf_preguntas"] = bin2hex(random_bytes(32));
+}
 
 // La lección con su bloque y su curso
 $stmt = $conexion->prepare(
@@ -102,6 +105,35 @@ $volver = $vistaPrevia
     : "curso.php?id=" . $cursoId . "#l" . $subId;
 
 $html = htmlParaMostrar($leccion["contenido"]);
+
+// Ponentes asignados a este curso para dirigir la pregunta
+$stmt = $conexion->prepare(
+    "SELECT u.id, u.nombre
+     FROM curso_ponentes cp
+     INNER JOIN usuarios u ON u.id = cp.usuario_id
+     WHERE cp.curso_id = ?
+     ORDER BY u.nombre"
+);
+$stmt->bind_param("i", $cursoId);
+$stmt->execute();
+$ponentesCurso = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+
+// Historial de preguntas del alumno para esta lección
+$stmt = $conexion->prepare(
+    "SELECT pp.pregunta, pp.respuesta, pp.estado, pp.creado_en, pp.respondido_en,
+            u.nombre AS ponente
+     FROM preguntas_ponente pp
+     INNER JOIN usuarios u ON u.id = pp.ponente_id
+     WHERE pp.alumno_id = ? AND pp.curso_id = ? AND pp.subbloque_id = ?
+     ORDER BY pp.creado_en DESC, pp.id DESC"
+);
+$stmt->bind_param("iii", $uid, $cursoId, $subId);
+$stmt->execute();
+$preguntasAlumno = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+
+$mensajePregunta = $_GET["msg"] ?? "";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -140,6 +172,56 @@ $html = htmlParaMostrar($leccion["contenido"]);
         <p class="lector-vacio">Esta lección todavía no tiene contenido.</p>
     <?php else: ?>
         <article class="contenido-leccion"><?php echo $html; ?></article>
+    <?php endif; ?>
+
+    <?php if (!$vistaPrevia): ?>
+        <section class="preguntas-leccion" aria-labelledby="titulo-preguntas">
+            <h2 id="titulo-preguntas">Preguntar al ponente</h2>
+            <?php if ($mensajePregunta === "pregunta_enviada"): ?>
+                <p class="pregunta-aviso ok">Tu pregunta fue enviada.</p>
+            <?php elseif ($mensajePregunta === "pregunta_error"): ?>
+                <p class="pregunta-aviso error">No se pudo enviar la pregunta. Inténtalo de nuevo.</p>
+            <?php endif; ?>
+
+            <?php if ($ponentesCurso): ?>
+                <form method="POST" action="../acciones_preguntas_alumno.php" class="pregunta-formulario">
+                    <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION["csrf_preguntas"]); ?>">
+                    <input type="hidden" name="subbloque_id" value="<?php echo $subId; ?>">
+                    <label for="ponente-pregunta">Enviar a</label>
+                    <select id="ponente-pregunta" name="ponente_id" required>
+                        <?php foreach ($ponentesCurso as $ponente): ?>
+                            <option value="<?php echo (int) $ponente["id"]; ?>"><?php echo htmlspecialchars($ponente["nombre"]); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <label for="texto-pregunta">Tu pregunta</label>
+                    <textarea id="texto-pregunta" name="pregunta" maxlength="3000" rows="4" required
+                              placeholder="Escribe aquí tu pregunta sobre esta lección…"></textarea>
+                    <button type="submit" class="lector-btn primario">Enviar pregunta</button>
+                </form>
+            <?php else: ?>
+                <p>No hay ponentes asignados a este curso por el momento.</p>
+            <?php endif; ?>
+
+            <?php if ($preguntasAlumno): ?>
+                <h3>Mis preguntas en esta lección</h3>
+                <div class="preguntas-historial">
+                    <?php foreach ($preguntasAlumno as $pregunta): ?>
+                        <article class="pregunta-item">
+                            <p><strong>Tu pregunta</strong> · <?php echo htmlspecialchars($pregunta["ponente"]); ?>
+                                · <?php echo date("d/m/Y H:i", strtotime($pregunta["creado_en"])); ?></p>
+                            <div><?php echo nl2br(htmlspecialchars($pregunta["pregunta"])); ?></div>
+                            <?php if ($pregunta["estado"] === "respondida"): ?>
+                                <p class="respuesta-cabecera"><strong>Respuesta del ponente</strong>
+                                    · <?php echo date("d/m/Y H:i", strtotime($pregunta["respondido_en"])); ?></p>
+                                <div><?php echo nl2br(htmlspecialchars($pregunta["respuesta"] ?? "")); ?></div>
+                            <?php else: ?>
+                                <span class="pregunta-pendiente">Pendiente de respuesta</span>
+                            <?php endif; ?>
+                        </article>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
+        </section>
     <?php endif; ?>
 </main>
 

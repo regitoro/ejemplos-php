@@ -176,6 +176,49 @@ body {
 .enlace-tarjeta { text-decoration: none; transition: transform 0.15s; }
 .enlace-tarjeta:hover { transform: translateY(-2px); }
 
+/* ---------- Ejercicios y calificaciones ---------- */
+.ejercicios-admin > p { margin-bottom: 14px; }
+.ejercicio-maximo { max-width: 220px; }
+.ejercicios-lista-admin { display: grid; gap: 14px; margin-top: 20px; }
+.ejercicio-admin-item, .entrega-ejercicio { padding: 16px; border: 1px solid #e5e7eb; border-radius: 10px; }
+.ejercicio-admin-item > p { margin: 12px 0; line-height: 1.6; white-space: pre-wrap; }
+.ejercicio-admin-item > small { color: #6b7280; }
+.ejercicio-admin-item > form { margin-top: 12px; }
+.entrega-ejercicio { margin-bottom: 18px; }
+.curso-entregas { margin-bottom: 28px; }
+.curso-entregas-titulo { padding-bottom: 10px; border-bottom: 1px solid #e5e7eb; }
+.grupo-entregas { margin-top: 14px; padding: 14px; border: 1px solid #e5e7eb; border-radius: 12px; background: #f9fafb; }
+.grupo-entregas > summary, .ver-entrega-calificada > summary { cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: 700; }
+.grupo-entregas > summary .etiqueta { margin-left: auto; }
+.grupo-sin-entregas { padding: 16px 0 4px; color: #6b7280; }
+.ver-entrega-calificada { margin-top: 16px; }
+.comentario-calificacion { background: #eef2ff; }
+.entrega-ejercicio-cabecera { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+.entrega-ejercicio-cabecera h2 { margin: 0 0 8px; }
+.entrega-ejercicio-cabecera p { margin-top: 5px; }
+.entrega-respuesta { margin-top: 16px; padding: 14px; border-radius: 9px; background: #f9fafb; }
+.entrega-respuesta p { margin-top: 8px; line-height: 1.6; white-space: pre-wrap; }
+.form-calificar-ejercicio { display: grid; gap: 10px; margin-top: 16px; }
+.form-calificar-ejercicio label { font-weight: 600; }
+.form-calificar-ejercicio input[type="number"], .form-calificar-ejercicio textarea {
+    width: 100%; max-width: 500px; padding: 10px 12px; border: 1px solid #d1d5db;
+    border-radius: 8px; font: inherit;
+}
+.form-calificar-ejercicio textarea { max-width: 100%; resize: vertical; }
+.form-calificar-ejercicio button { justify-self: start; }
+
+/* ---------- Preguntas y respuestas de alumnos ---------- */
+.pregunta-ponente { margin-bottom: 20px; }
+.pregunta-ponente-cabecera { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+.pregunta-ponente-cabecera h2 { margin-bottom: 8px; }
+.pregunta-ponente-cabecera p, .pregunta-ponente-texto p, .respuesta-ponente p { margin-top: 8px; color: #374151; line-height: 1.6; }
+.pregunta-ponente-texto, .respuesta-ponente { margin-top: 18px; padding: 14px; border-radius: 9px; background: #f9fafb; }
+.respuesta-ponente { background: #eef2ff; }
+.respuesta-ponente-form { display: grid; gap: 10px; margin-top: 18px; }
+.respuesta-ponente-form label { font-weight: 600; }
+.respuesta-ponente-form textarea { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; font: inherit; resize: vertical; }
+.respuesta-ponente-form button { justify-self: start; }
+
 /* Gráfica de barras */
 .grafica-fila {
     display: grid;

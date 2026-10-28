@@ -1,5 +1,4 @@
-<!-- Recibe la imagen del editor y devuelve su dirección. Comprueba que la persona pueda editar ese curso, y detecta el tipo real de la imagen con getimagesize -->
- <?php
+<?php
 session_start();
 require_once "conexion.php";
 require_once "permisos.php";
@@ -79,4 +78,7 @@ if (!move_uploaded_file($archivo["tmp_name"], $carpeta . "/" . $nombre)) {
     responder(500, ["error" => "No se pudo guardar la imagen."]);
 }
 
-responder(200, ["url" => "/uploads/lecciones/" . $nombre]);
+$baseUrl = str_replace("\\", "/", dirname($_SERVER["SCRIPT_NAME"] ?? "/"));
+$baseUrl = ($baseUrl === "." || $baseUrl === "/") ? "" : rtrim($baseUrl, "/");
+$url = $baseUrl . "/uploads/lecciones/" . $nombre;
+responder(200, ["url" => $url]);

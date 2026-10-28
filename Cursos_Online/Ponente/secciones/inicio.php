@@ -50,18 +50,18 @@ $stmt->close();
 ?>
 
 <div class="resumen">
-    <div class="tarjeta dato">
+    <a class="tarjeta dato enlace-tarjeta" href="ponente.php?seccion=cursos">
         <span class="numero"><?php echo $totalCursos; ?></span>
         <span class="etiqueta-dato">Cursos asignados</span>
-    </div>
-    <div class="tarjeta dato">
+    </a>
+    <a class="tarjeta dato enlace-tarjeta" href="ponente.php?seccion=usuarios">
         <span class="numero"><?php echo $totalAlumnos; ?></span>
         <span class="etiqueta-dato">Alumnos</span>
-    </div>
-    <div class="tarjeta dato">
+    </a>
+    <a class="tarjeta dato enlace-tarjeta" href="ponente.php?seccion=cursos">
         <span class="numero"><?php echo $cursosActivos; ?></span>
         <span class="etiqueta-dato">Cursos activos</span>
-    </div>
+    </a>
 </div>
 
 <?php if (count($cursos) === 0): ?>

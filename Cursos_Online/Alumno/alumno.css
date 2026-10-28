@@ -124,3 +124,34 @@
 }
 .al-leccion-enlace:hover { color: #4f46e5; text-decoration: underline; }
 .leccion.hecha .al-leccion-enlace { text-decoration: line-through; color: #6b7280; }
+
+/* ---------- Ejercicios y calificaciones ---------- */
+.ejercicios-alumno { margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb; }
+.ejercicios-alumno > h2 { margin: 0 0 16px; }
+.ejercicios-alumno-lista { display: grid; gap: 16px; }
+.ejercicio-alumno { padding: 18px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; }
+.ejercicio-alumno-cabecera { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.ejercicio-alumno-cabecera h3 { font-size: 1.1rem; }
+.ejercicio-alumno-cabecera span { color: #6b7280; white-space: nowrap; }
+.ejercicio-instrucciones { margin: 12px 0; line-height: 1.6; white-space: pre-wrap; }
+.form-entrega-ejercicio { display: grid; gap: 10px; }
+.form-entrega-ejercicio label { font-weight: 600; }
+.form-entrega-ejercicio textarea { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font: inherit; resize: vertical; }
+.form-entrega-ejercicio button { justify-self: start; }
+.respuesta-alumno, .resultado-ejercicio, .calificacion-final { margin-top: 14px; padding: 14px; border-radius: 9px; background: #f9fafb; }
+.respuesta-alumno p, .resultado-ejercicio p { margin-top: 8px; line-height: 1.6; white-space: pre-wrap; }
+.resultado-ejercicio { background: #eef2ff; }
+.resultado-ejercicio span { margin-left: 8px; color: #4f46e5; font-weight: 700; }
+.ejercicio-pendiente { margin-top: 12px; color: #92400e; font-weight: 600; }
+.respuesta-editar { margin-top: 12px; }
+.calificacion-final { margin-bottom: 20px; background: #dcfce7; color: #166534; }
+.calificacion-final p { margin-top: 6px; font-size: 1.4rem; font-weight: 700; }
+.calificacion-final small { display: block; margin-top: 4px; }
+.aviso-ejercicio { margin-bottom: 14px; padding: 10px 12px; border-radius: 8px; }
+.aviso-ejercicio.ok { background: #dcfce7; color: #166534; }
+.aviso-ejercicio.error { background: #fee2e2; color: #991b1b; }
+
+@media (max-width: 600px) {
+    .ejercicio-alumno-cabecera { flex-direction: column; }
+    .ejercicio-alumno-cabecera span { white-space: normal; }
+}

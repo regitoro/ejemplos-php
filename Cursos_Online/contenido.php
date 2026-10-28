@@ -57,7 +57,7 @@ function limpiarAtributos(DOMElement $el, string $etiqueta, array $permitidos): 
                 $nuevo = preg_match('#^(https?://|mailto:)#i', $valor) ? $valor : null;
             } elseif ($nombre === "src") {
                 // Solo imágenes subidas por el propio sistema
-                $nuevo = preg_match('#^/uploads/lecciones/[a-f0-9]{32}\.(jpg|png|gif|webp)$#', $valor) ? $valor : null;
+                $nuevo = preg_match('#^/(?:[A-Za-z0-9._~%+-]+/)*uploads/lecciones/[a-f0-9]{32}\.(jpg|png|gif|webp)$#', $valor) ? $valor : null;
             } elseif ($nombre === "alt") {
                 $nuevo = substr($valor, 0, 200);
             }

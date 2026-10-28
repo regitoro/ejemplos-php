@@ -1,5 +1,5 @@
-<!-- quien puede editar un curso -->
- <?php
+<?php
+// Quién puede editar un curso.
 // Etiquetas de revisión: clave => [texto, clase CSS]
 const ETIQUETAS_REVISION = [
     "sin_enviar"  => ["Sin enviar",          "rev-sin_enviar"],

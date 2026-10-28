@@ -20,11 +20,20 @@ if (strtolower($_SESSION["rol"] ?? "") !== "admin") {
 $enRevision = (int) $conexion->query(
     "SELECT COUNT(*) AS n FROM cursos WHERE aprobacion = 'en_revision'"
 )->fetch_assoc()["n"];
+$stmt = $conexion->prepare(
+    "SELECT COUNT(*) AS n FROM entregas_ejercicios ee
+     INNER JOIN ejercicios e ON e.id = ee.ejercicio_id
+     WHERE ee.puntuacion IS NULL"
+);
+$stmt->execute();
+$ejerciciosPendientes = (int) $stmt->get_result()->fetch_assoc()["n"];
+$stmt->close();
 
 // Secciones permitidas (lista blanca) con su texto e ícono
 $secciones = [
     "inicio"     => ["Inicio",     "🏠"],
     "cursos"     => ["Cursos",     "📚"],
+    "calificar_ejercicios" => ["Calificar ejercicios", "📝"],
     "revision"      => ["Revisión de cursos", "✅"],
     "inscripciones" => ["Inscripciones", "📅"],
     "usuarios"   => ["Usuarios",   "👥"],
@@ -58,6 +67,9 @@ if (!isset($secciones[$seccion])) {
                     <?php echo $texto; ?>
                     <?php if ($clave === "revision" && $enRevision > 0): ?>
                         <span class="insignia"><?php echo $enRevision; ?></span>
+                    <?php endif; ?>
+                    <?php if ($clave === "calificar_ejercicios" && $ejerciciosPendientes > 0): ?>
+                        <span class="insignia"><?php echo $ejerciciosPendientes; ?></span>
                     <?php endif; ?>
                 </a>
             <?php endforeach; ?>

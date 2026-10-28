@@ -48,18 +48,18 @@ foreach ($cursos as $c) {
 
 <!-- Tarjetas -->
 <div class="resumen">
-    <div class="tarjeta dato enlace-tarjeta" href="admin.php?seccion=usuarios">
+    <a class="tarjeta dato enlace-tarjeta" href="admin.php?seccion=usuarios">
         <span class="numero"><?php echo (int) $totalAlumnos; ?></span>
         <span class="etiqueta-dato">Alumnos</span>
-    </div>
-    <div class="tarjeta dato"  href="admin.php?seccion=cursos">
+    </a>
+    <a class="tarjeta dato enlace-tarjeta" href="admin.php?seccion=cursos">
         <span class="numero"><?php echo (int) $totalCursos; ?></span>
         <span class="etiqueta-dato">Cursos</span>
-    </div>
-    <div class="tarjeta dato"  href="admin.php?seccion=cursos">
+    </a>
+    <a class="tarjeta dato enlace-tarjeta" href="admin.php?seccion=cursos">
         <span class="numero"><?php echo (int) $cursosActivos; ?></span>
         <span class="etiqueta-dato">Cursos activos</span>
-    </div>
+    </a>
     <a class="tarjeta dato enlace-tarjeta" href="admin.php?seccion=usuarios">
         <span class="numero"><?php echo (int) $pendientes; ?></span>
         <span class="etiqueta-dato">Solicitudes pendientes</span>

@@ -10,6 +10,16 @@ if (!isset($_SESSION["usuario_id"])) {
 
 $conexion = conectar();
 sincronizarRol($conexion);
+$stmt = $conexion->prepare(
+    "SELECT COUNT(*) AS n FROM entregas_ejercicios ee
+     INNER JOIN ejercicios e ON e.id = ee.ejercicio_id
+     INNER JOIN cursos c ON c.id = e.curso_id
+     WHERE c.director_id = ? AND ee.puntuacion IS NULL"
+);
+$stmt->bind_param("i", $_SESSION["usuario_id"]);
+$stmt->execute();
+$ejerciciosPendientes = (int) $stmt->get_result()->fetch_assoc()["n"];
+$stmt->close();
 
 if (strtolower($_SESSION["rol"] ?? "") !== "director") {
     header("Location: ../mainWindow.php");
@@ -20,6 +30,7 @@ if (strtolower($_SESSION["rol"] ?? "") !== "director") {
 $secciones = [
     "inicio"        => ["Inicio",        "🏠"],
     "cursos"        => ["Cursos",        "📚"],
+    "calificar_ejercicios" => ["Calificar ejercicios", "📝"],
     "inscripciones" => ["Inscripciones", "📝"],
     "usuarios"      => ["Usuarios",      "👥"],
     "perfil"        => ["Perfil",        "👤"],
@@ -50,6 +61,9 @@ if (!isset($secciones[$seccion])) {
                    class="<?php echo $clave === $seccion ? 'activo' : ''; ?>">
                     <span class="icono"><?php echo $icono; ?></span>
                     <?php echo $texto; ?>
+                    <?php if ($clave === "calificar_ejercicios" && $ejerciciosPendientes > 0): ?>
+                        <span class="insignia"><?php echo $ejerciciosPendientes; ?></span>
+                    <?php endif; ?>
                 </a>
             <?php endforeach; ?>
         </nav>

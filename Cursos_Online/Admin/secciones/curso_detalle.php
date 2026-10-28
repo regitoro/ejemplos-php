@@ -6,6 +6,9 @@ $cursoId = (int) ($_GET["gestionar"] ?? 0);
 $rolDetalle = strtolower($_SESSION["rol"] ?? "");
 $esAdmin    = $rolDetalle === "admin";
 $esPonente  = $rolDetalle === "ponente";
+if (empty($_SESSION["csrf_ejercicios"])) {
+    $_SESSION["csrf_ejercicios"] = bin2hex(random_bytes(32));
+}
 
 $stmt = $conexion->prepare(
     "SELECT id, nombre, estado, director_id, aprobacion, revision_comentario
@@ -26,6 +29,16 @@ if (!$curso) {
     echo '<a href="' . $panel . '?seccion=cursos" class="btn-link">← Volver a cursos</a>';
     return;
 }
+
+$stmt = $conexion->prepare(
+    "SELECT e.id, e.titulo, e.instrucciones, e.puntuacion_maxima,
+            (SELECT COUNT(*) FROM entregas_ejercicios ee WHERE ee.ejercicio_id = e.id) AS entregas
+     FROM ejercicios e WHERE e.curso_id = ? ORDER BY e.creado_en, e.id"
+);
+$stmt->bind_param("i", $cursoId);
+$stmt->execute();
+$ejerciciosCurso = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
 
 // No se edita mientras el curso está en revisión (salvo el admin)
 $bloqueado = !$esAdmin && $curso["aprobacion"] === "en_revision";
@@ -56,6 +69,11 @@ $mensajes = [
     "insc_creadas" => ["ok",    "Alumnos inscritos correctamente."],
     "insc_quitada" => ["ok",    "Alumno quitado del curso, junto con su progreso."],
     "insc_nada"    => ["error", "No se inscribió a nadie: elige al menos un alumno disponible."],
+    "ejercicio_creado" => ["ok", "Ejercicio creado."],
+    "ejercicio_actualizado" => ["ok", "Ejercicio actualizado."],
+    "ejercicio_eliminado" => ["ok", "Ejercicio eliminado."],
+    "ejercicio_invalido" => ["error", "Completa los datos y establece una puntuación máxima válida (hasta 1000 puntos)."],
+    "ejercicio_con_entregas" => ["error", "No se puede editar ni eliminar este ejercicio porque ya tiene entregas."],
 ];
 $msg = $_GET["msg"] ?? "";
 
@@ -451,6 +469,87 @@ function botonesMover(string $tipo, int $id): void {
             <a href="<?php echo $panel; ?>?seccion=inscripciones&curso=<?php echo $cursoId; ?>">Inscripciones</a>.
         </p>
 
+    <?php endif; ?>
+</div>
+
+<!-- Ejercicios del curso -->
+<div class="tarjeta ejercicios-admin">
+    <h2>Ejercicios <span class="contador"><?php echo count($ejerciciosCurso); ?></span></h2>
+    <p>Los alumnos inscritos podrán responderlos desde la página de este curso. Las entregas calificadas forman parte del promedio final.</p>
+
+    <details class="editar">
+        <summary>+ Crear ejercicio</summary>
+        <form method="POST" action="../acciones_ejercicios.php" class="formulario">
+            <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION["csrf_ejercicios"]); ?>">
+            <input type="hidden" name="accion" value="crear">
+            <input type="hidden" name="curso_id" value="<?php echo $cursoId; ?>">
+            <div class="campo-admin">
+                <label for="titulo-ejercicio">Título</label>
+                <input id="titulo-ejercicio" type="text" name="titulo" maxlength="150" required>
+            </div>
+            <div class="campo-admin">
+                <label for="instrucciones-ejercicio">Instrucciones</label>
+                <textarea id="instrucciones-ejercicio" name="instrucciones" rows="5" maxlength="20000" required></textarea>
+            </div>
+            <div class="campo-admin ejercicio-maximo">
+                <label for="maximo-ejercicio">Puntuación máxima</label>
+                <input id="maximo-ejercicio" type="number" name="puntuacion_maxima" min="0.01" max="1000" step="0.01" value="10" required>
+            </div>
+            <button type="submit" class="btn-principal">Crear ejercicio</button>
+        </form>
+    </details>
+
+    <?php if (!$ejerciciosCurso): ?>
+        <p>Aún no hay ejercicios en este curso.</p>
+    <?php else: ?>
+        <div class="ejercicios-lista-admin">
+            <?php foreach ($ejerciciosCurso as $ejercicio): ?>
+                <article class="ejercicio-admin-item">
+                    <div class="fila-item">
+                        <strong><?php echo htmlspecialchars($ejercicio["titulo"]); ?></strong>
+                        <span class="etiqueta estado-activo">
+                            Máximo: <?php echo number_format((float) $ejercicio["puntuacion_maxima"], 2); ?> puntos
+                        </span>
+                    </div>
+                    <p><?php echo nl2br(htmlspecialchars($ejercicio["instrucciones"])); ?></p>
+                    <small><?php echo (int) $ejercicio["entregas"]; ?> entregas</small>
+
+                    <?php if ((int) $ejercicio["entregas"] === 0): ?>
+                        <details class="editar">
+                            <summary>Editar ejercicio</summary>
+                            <form method="POST" action="../acciones_ejercicios.php" class="formulario">
+                                <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION["csrf_ejercicios"]); ?>">
+                                <input type="hidden" name="accion" value="editar">
+                                <input type="hidden" name="curso_id" value="<?php echo $cursoId; ?>">
+                                <input type="hidden" name="ejercicio_id" value="<?php echo (int) $ejercicio["id"]; ?>">
+                                <div class="campo-admin">
+                                    <label for="titulo-ejercicio-<?php echo (int) $ejercicio["id"]; ?>">Título</label>
+                                    <input id="titulo-ejercicio-<?php echo (int) $ejercicio["id"]; ?>" type="text" name="titulo" maxlength="150" required value="<?php echo htmlspecialchars($ejercicio["titulo"]); ?>">
+                                </div>
+                                <div class="campo-admin">
+                                    <label for="instrucciones-ejercicio-<?php echo (int) $ejercicio["id"]; ?>">Instrucciones</label>
+                                    <textarea id="instrucciones-ejercicio-<?php echo (int) $ejercicio["id"]; ?>" name="instrucciones" rows="4" maxlength="20000" required><?php echo htmlspecialchars($ejercicio["instrucciones"]); ?></textarea>
+                                </div>
+                                <div class="campo-admin ejercicio-maximo">
+                                    <label for="maximo-ejercicio-<?php echo (int) $ejercicio["id"]; ?>">Puntuación máxima</label>
+                                    <input id="maximo-ejercicio-<?php echo (int) $ejercicio["id"]; ?>" type="number" name="puntuacion_maxima" min="0.01" max="1000" step="0.01" required value="<?php echo htmlspecialchars((string) $ejercicio["puntuacion_maxima"]); ?>">
+                                </div>
+                                <button type="submit" class="btn-principal">Guardar cambios</button>
+                            </form>
+                        </details>
+                        <form method="POST" action="../acciones_ejercicios.php" onsubmit="return confirm('¿Eliminar este ejercicio?');">
+                            <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION["csrf_ejercicios"]); ?>">
+                            <input type="hidden" name="accion" value="eliminar">
+                            <input type="hidden" name="curso_id" value="<?php echo $cursoId; ?>">
+                            <input type="hidden" name="ejercicio_id" value="<?php echo (int) $ejercicio["id"]; ?>">
+                            <button type="submit" class="btn-peligro mini">Eliminar</button>
+                        </form>
+                    <?php else: ?>
+                        <p class="nota">No se puede editar ni eliminar después de recibir entregas para conservar el historial de calificaciones.</p>
+                    <?php endif; ?>
+                </article>
+            <?php endforeach; ?>
+        </div>
     <?php endif; ?>
 </div>
 

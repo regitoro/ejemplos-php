@@ -63,6 +63,30 @@ body.lector {
 .lector-btn.hecha    { background: #dcfce7; color: #166534; }
 .lector-btn.apagado  { opacity: 0.4; pointer-events: none; }
 
+.preguntas-leccion {
+    margin-top: 40px;
+    padding-top: 28px;
+    border-top: 1px solid #e5e7eb;
+}
+.preguntas-leccion h2 { margin: 0 0 16px; }
+.preguntas-leccion h3 { margin: 28px 0 12px; }
+.pregunta-formulario { display: grid; gap: 10px; max-width: 680px; }
+.pregunta-formulario label { font-weight: 600; }
+.pregunta-formulario select, .pregunta-formulario textarea {
+    width: 100%; padding: 11px 12px; border: 1px solid #d1d5db;
+    border-radius: 8px; font: inherit; background: #fff;
+}
+.pregunta-formulario textarea { resize: vertical; }
+.pregunta-formulario button { justify-self: start; }
+.preguntas-historial { display: grid; gap: 12px; }
+.pregunta-item { padding: 16px; border: 1px solid #e5e7eb; border-radius: 10px; background: #fff; }
+.pregunta-item > p:first-child { margin-bottom: 10px; color: #6b7280; font-size: 0.9rem; }
+.pregunta-item .respuesta-cabecera { margin: 16px 0 8px; color: #4f46e5; }
+.pregunta-pendiente { display: inline-block; margin-top: 12px; color: #92400e; font-weight: 600; }
+.pregunta-aviso { margin: 0 0 14px; padding: 10px 12px; border-radius: 8px; }
+.pregunta-aviso.ok { background: #dcfce7; color: #166534; }
+.pregunta-aviso.error { background: #fee2e2; color: #991b1b; }
+
 @media (max-width: 600px) {
     .lector-contenido { padding: 24px 16px; }
     .lector-titulo { font-size: 1.7rem; }
