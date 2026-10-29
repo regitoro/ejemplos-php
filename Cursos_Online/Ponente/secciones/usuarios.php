@@ -110,6 +110,7 @@ $visibles = array_filter(
                     <li>
                         <div>
                             <strong><?php echo htmlspecialchars($a["nombre"]); ?></strong>
+                            <small>ID: <?php echo (int) $a["id"]; ?></small>
                             <small><?php echo htmlspecialchars($a["email"]); ?></small>
                         </div>
                         <div class="progreso-alumno">

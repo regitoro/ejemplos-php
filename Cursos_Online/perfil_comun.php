@@ -15,7 +15,7 @@ $mensajesPerfil = [
 $msgPerfil = $_GET["msg"] ?? "";
 
 $stmt = $conexion->prepare(
-    "SELECT u.nombre, u.email, r.nombre AS rol
+    "SELECT u.id, u.nombre, u.email, r.nombre AS rol
      FROM usuarios u
      INNER JOIN roles r ON u.rol_id = r.id
      WHERE u.id = ?"
@@ -46,6 +46,7 @@ if (!$perfil) {
     </h2>
 
     <ul class="datos-usuario">
+        <li><strong>ID</strong> <span><?php echo (int) $perfil["id"]; ?></span></li>
         <li><strong>Correo</strong> <span><?php echo htmlspecialchars($perfil["email"]); ?></span></li>
     </ul>
 

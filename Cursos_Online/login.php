@@ -89,6 +89,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <label for="password">Contraseña</label>
             <input type="password" id="password" name="password" autocomplete="current-password" required>
         </div>
+
+        <p class="enlace-recuperacion"><a href="recuperar_contrasena.php">¿Olvidaste tu contraseña?</a></p>
  
         <button type="submit">Entrar</button>
  

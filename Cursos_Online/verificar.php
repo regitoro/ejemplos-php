@@ -40,21 +40,30 @@ if (!preg_match('/^[0-9a-f]{64}$/', $token)) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Verificar correo</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <h1>Verificación de correo</h1>
-
-    <p><?php echo htmlspecialchars($mensaje); ?></p>
+<main class="card estado-verificacion">
+    <a class="verificacion-volver" href="login.php">← Volver a iniciar sesión</a>
+    <div class="verificacion-icono <?php echo $exito ? 'correcto' : 'error'; ?>" aria-hidden="true">
+        <?php echo $exito ? '✓' : '!'; ?>
+    </div>
+    <span class="verificacion-kicker">ESTADO DE TU CUENTA</span>
+    <h1><?php echo $exito ? 'Correo verificado' : 'No se pudo verificar'; ?></h1>
+    <p class="verificacion-mensaje" role="<?php echo $exito ? 'status' : 'alert'; ?>">
+        <?php echo htmlspecialchars($mensaje); ?>
+    </p>
 
     <?php if ($exito): ?>
-        <p>
-            Ahora debes esperar a que un administrador autorice tu cuenta
-            para poder entrar.
-        </p>
+        <div class="verificacion-siguiente-paso">
+            <span class="verificacion-paso-numero">Siguiente paso</span>
+            <p>Tu cuenta está pendiente de aprobación. Podrás iniciar sesión cuando el administrador la autorice.</p>
+        </div>
+    <?php else: ?>
+        <p class="verificacion-ayuda">Revisa que el enlace esté completo. Si ya fue utilizado, puedes volver a iniciar sesión.</p>
     <?php endif; ?>
 
-    <a href="login.php">Ir a iniciar sesión</a>
-
+    <a class="btn verificacion-accion" href="login.php">Ir a iniciar sesión</a>
+</main>
 </body>
 </html>

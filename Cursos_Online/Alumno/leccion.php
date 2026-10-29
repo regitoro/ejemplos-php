@@ -157,7 +157,7 @@ $mensajePregunta = $_GET["msg"] ?? "";
             · <?php echo $hechas; ?> de <?php echo $total; ?> completadas
         <?php endif; ?>
     </span>
-    <button type="button" id="btnPantalla" class="lector-btn suave">⛶ Pantalla completa</button>
+    <button type="button" id="btnPantalla" class="lector-btn suave">Pantalla completa</button>
 </header>
 
 <main class="lector-contenido">
@@ -238,7 +238,7 @@ $mensajePregunta = $_GET["msg"] ?? "";
             <input type="hidden" name="subbloque_id" value="<?php echo $subId; ?>">
             <input type="hidden" name="volver" value="leccion">
             <button type="submit" class="lector-btn <?php echo $completada ? 'hecha' : 'completar'; ?>">
-                <?php echo $completada ? "✔ Completada (clic para desmarcar)" : "Marcar como completada"; ?>
+                <?php echo $completada ? "Completada (clic para desmarcar)" : "Marcar como completada"; ?>
             </button>
         </form>
     <?php endif; ?>
@@ -261,7 +261,7 @@ boton.addEventListener('click', () => {
     }
 });
 document.addEventListener('fullscreenchange', () => {
-    boton.textContent = document.fullscreenElement ? '✕ Salir de pantalla completa' : '⛶ Pantalla completa';
+    boton.textContent = document.fullscreenElement ? 'Salir de pantalla completa' : 'Pantalla completa';
 });
 </script>
 

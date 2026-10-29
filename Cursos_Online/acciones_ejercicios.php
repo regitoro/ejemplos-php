@@ -37,15 +37,54 @@ if (!puedeEditarCurso($conexion, $cursoId, $rol, $uid)) {
     $titulo = trim($_POST["titulo"] ?? "");
     $instrucciones = trim($_POST["instrucciones"] ?? "");
     $maximo = filter_var($_POST["puntuacion_maxima"] ?? null, FILTER_VALIDATE_FLOAT);
-    if ($titulo !== "" && strlen($titulo) <= 150 && $instrucciones !== ""
-        && strlen($instrucciones) <= 20000 && $maximo !== false && $maximo > 0 && $maximo <= 1000) {
-        $stmt = $conexion->prepare(
-            "INSERT INTO ejercicios (curso_id, creado_por, titulo, instrucciones, puntuacion_maxima)
-             VALUES (?, ?, ?, ?, ?)"
-        );
-        $stmt->bind_param("iissd", $cursoId, $uid, $titulo, $instrucciones, $maximo);
-        $msg = $stmt->execute() ? "ejercicio_creado" : "error";
+    $tipo = $_POST["tipo"] ?? "abierta";
+    $bloqueId = (int) ($_POST["bloque_id"] ?? 0);
+    $opcionesEnviadas = $_POST["opciones"] ?? [];
+    $opciones = is_array($opcionesEnviadas) ? array_map("trim", $opcionesEnviadas) : [];
+    $correcta = filter_var($_POST["correcta"] ?? null, FILTER_VALIDATE_INT);
+    $bloqueValido = false;
+    if ($bloqueId > 0) {
+        $stmt = $conexion->prepare("SELECT id FROM bloques WHERE id = ? AND curso_id = ?");
+        $stmt->bind_param("ii", $bloqueId, $cursoId);
+        $stmt->execute();
+        $bloqueValido = $stmt->get_result()->num_rows === 1;
         $stmt->close();
+    }
+    $quizValido = $tipo !== "multiple"
+        || (count($opciones) === 4 && !in_array("", $opciones, true)
+            && max(array_map("strlen", $opciones)) <= 500 && $correcta !== false
+            && $correcta >= 0 && $correcta < count($opciones));
+
+    if ($titulo !== "" && strlen($titulo) <= 150 && $instrucciones !== ""
+        && strlen($instrucciones) <= 20000 && $maximo !== false && $maximo > 0 && $maximo <= 1000
+        && in_array($tipo, ["abierta", "multiple"], true) && $bloqueValido && $quizValido) {
+        $conexion->begin_transaction();
+        $stmt = $conexion->prepare(
+            "INSERT INTO ejercicios (curso_id, bloque_id, tipo, creado_por, titulo, instrucciones, puntuacion_maxima)
+             VALUES (?, ?, ?, ?, ?, ?, ?)"
+        );
+        $stmt->bind_param("iisissd", $cursoId, $bloqueId, $tipo, $uid, $titulo, $instrucciones, $maximo);
+        $ok = $stmt->execute();
+        $nuevoEjercicioId = $stmt->insert_id;
+        $stmt->close();
+        if ($ok && $tipo === "multiple") {
+            $stmt = $conexion->prepare(
+                "INSERT INTO opciones_ejercicio (ejercicio_id, texto, es_correcta, orden) VALUES (?, ?, ?, ?)"
+            );
+            foreach ($opciones as $indice => $textoOpcion) {
+                $esCorrecta = (int) ($indice === $correcta);
+                $orden = $indice + 1;
+                $stmt->bind_param("isii", $nuevoEjercicioId, $textoOpcion, $esCorrecta, $orden);
+                $ok = $stmt->execute() && $ok;
+            }
+            $stmt->close();
+        }
+        if ($ok) {
+            $conexion->commit();
+            $msg = "ejercicio_creado";
+        } else {
+            $conexion->rollback();
+        }
     } else {
         $msg = "ejercicio_invalido";
     }
@@ -54,6 +93,23 @@ if (!puedeEditarCurso($conexion, $cursoId, $rol, $uid)) {
     $titulo = trim($_POST["titulo"] ?? "");
     $instrucciones = trim($_POST["instrucciones"] ?? "");
     $maximo = filter_var($_POST["puntuacion_maxima"] ?? null, FILTER_VALIDATE_FLOAT);
+    $tipo = $_POST["tipo"] ?? "abierta";
+    $bloqueId = (int) ($_POST["bloque_id"] ?? 0);
+    $opcionesEnviadas = $_POST["opciones"] ?? [];
+    $opciones = is_array($opcionesEnviadas) ? array_map("trim", $opcionesEnviadas) : [];
+    $correcta = filter_var($_POST["correcta"] ?? null, FILTER_VALIDATE_INT);
+    $bloqueValido = false;
+    if ($bloqueId > 0) {
+        $stmt = $conexion->prepare("SELECT id FROM bloques WHERE id = ? AND curso_id = ?");
+        $stmt->bind_param("ii", $bloqueId, $cursoId);
+        $stmt->execute();
+        $bloqueValido = $stmt->get_result()->num_rows === 1;
+        $stmt->close();
+    }
+    $quizValido = $tipo !== "multiple"
+        || (count($opciones) === 4 && !in_array("", $opciones, true)
+            && max(array_map("strlen", $opciones)) <= 500 && $correcta !== false
+            && $correcta >= 0 && $correcta < count($opciones));
     $stmt = $conexion->prepare(
         "SELECT COUNT(*) AS n FROM entregas_ejercicios WHERE ejercicio_id = ?"
     );
@@ -63,18 +119,44 @@ if (!puedeEditarCurso($conexion, $cursoId, $rol, $uid)) {
     $stmt->close();
 
     if ($titulo === "" || strlen($titulo) > 150 || $instrucciones === "" || strlen($instrucciones) > 20000
-        || $maximo === false || $maximo <= 0 || $maximo > 1000) {
+        || $maximo === false || $maximo <= 0 || $maximo > 1000
+        || !in_array($tipo, ["abierta", "multiple"], true) || !$bloqueValido || !$quizValido) {
         $msg = "ejercicio_invalido";
     } elseif ($tieneEntregas) {
         $msg = "ejercicio_con_entregas";
     } else {
+        $conexion->begin_transaction();
         $stmt = $conexion->prepare(
-            "UPDATE ejercicios SET titulo = ?, instrucciones = ?, puntuacion_maxima = ?
+            "UPDATE ejercicios SET bloque_id = ?, tipo = ?, titulo = ?, instrucciones = ?, puntuacion_maxima = ?
              WHERE id = ? AND curso_id = ?"
         );
-        $stmt->bind_param("ssdii", $titulo, $instrucciones, $maximo, $ejercicioId, $cursoId);
-        $msg = $stmt->execute() ? "ejercicio_actualizado" : "error";
+        $stmt->bind_param("isssdii", $bloqueId, $tipo, $titulo, $instrucciones, $maximo, $ejercicioId, $cursoId);
+        $ok = $stmt->execute();
         $stmt->close();
+        if ($ok) {
+            $stmt = $conexion->prepare("DELETE FROM opciones_ejercicio WHERE ejercicio_id = ?");
+            $stmt->bind_param("i", $ejercicioId);
+            $ok = $stmt->execute();
+            $stmt->close();
+        }
+        if ($ok && $tipo === "multiple") {
+            $stmt = $conexion->prepare(
+                "INSERT INTO opciones_ejercicio (ejercicio_id, texto, es_correcta, orden) VALUES (?, ?, ?, ?)"
+            );
+            foreach ($opciones as $indice => $textoOpcion) {
+                $esCorrecta = (int) ($indice === $correcta);
+                $orden = $indice + 1;
+                $stmt->bind_param("isii", $ejercicioId, $textoOpcion, $esCorrecta, $orden);
+                $ok = $stmt->execute() && $ok;
+            }
+            $stmt->close();
+        }
+        if ($ok) {
+            $conexion->commit();
+            $msg = "ejercicio_actualizado";
+        } else {
+            $conexion->rollback();
+        }
     }
 
 } elseif ($accion === "eliminar" && $ejercicioId > 0) {

@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . "/../conexion.php";
 require_once __DIR__ . "/../permisos.php";
+require_once __DIR__ . "/../ui_icons.php";
 
 if (!isset($_SESSION["usuario_id"])) {
     header("Location: ../login.php");
@@ -20,9 +21,9 @@ $id = (int) $_SESSION["usuario_id"];
 
 // Secciones permitidas (lista blanca) con su texto e ícono
 $secciones = [
-    "explorar"   => ["Explorar cursos", "🔎"],
-    "mis_cursos" => ["Mis cursos",      "📚"],
-    "perfil"     => ["Perfil",          "👤"],
+    "explorar"   => ["Explorar cursos", "buscar"],
+    "mis_cursos" => ["Mis cursos",      "cursos"],
+    "perfil"     => ["Perfil",          "perfil"],
 ];
 
 $seccion = $_GET["seccion"] ?? "mis_cursos";
@@ -49,7 +50,7 @@ if (!isset($secciones[$seccion])) {
             <?php foreach ($secciones as $clave => [$texto, $icono]): ?>
                 <a href="alumno.php?seccion=<?php echo $clave; ?>"
                    class="<?php echo $clave === $seccion ? 'activo' : ''; ?>">
-                    <span class="icono"><?php echo $icono; ?></span>
+                    <span class="icono"><?php echo iconoInterfaz($icono); ?></span>
                     <?php echo $texto; ?>
                 </a>
             <?php endforeach; ?>

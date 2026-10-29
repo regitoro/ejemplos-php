@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/../../ui_icons.php";
 $mensajesSol = [
     "solicitud_enviada"   => ["ok",    "Solicitud enviada. Te avisaremos cuando sea revisada: aparecerá el curso en Mis cursos si se aprueba."],
     "solicitud_existe"    => ["ok",    "Ya tenías una solicitud pendiente para ese curso."],
@@ -29,13 +30,43 @@ $sql = "SELECT c.id, c.nombre, c.descripcion, c.estado, c.fecha_inicio, c.fecha_
                (SELECT sl.estado FROM solicitudes_inscripcion sl
                  WHERE sl.curso_id = c.id AND sl.usuario_id = ?) AS solicitud
         FROM cursos c
-        WHERE c.estado <> 'borrador' AND c.nombre LIKE ?
+        WHERE c.estado <> 'borrador'
+          AND c.nombre LIKE ?
+          AND NOT EXISTS (
+              SELECT 1 FROM inscripciones i
+              WHERE i.curso_id = c.id AND i.usuario_id = ?
+          )
         ORDER BY c.nombre";
 $stmt = $conexion->prepare($sql);
-$stmt->bind_param("iis", $id, $id, $like);
+    $stmt->bind_param("iisi", $id, $id, $like, $id);
 $stmt->execute();
 $cursos = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
+
+// Temario de los cursos visibles: títulos de bloques y lecciones, nunca su contenido.
+$temarios = [];
+if ($cursos) {
+    $idsCursos = implode(",", array_map(fn($curso) => (int) $curso["id"], $cursos));
+    $resultadoTemario = $conexion->query(
+        "SELECT b.curso_id, b.id AS bloque_id, b.titulo AS bloque,
+                s.id AS leccion_id, s.titulo AS leccion
+         FROM bloques b
+         LEFT JOIN subbloques s ON s.bloque_id = b.id
+         WHERE b.curso_id IN ($idsCursos)
+         ORDER BY b.orden, b.id, s.orden, s.id"
+    );
+
+    while ($fila = $resultadoTemario->fetch_assoc()) {
+        $cursoId = (int) $fila["curso_id"];
+        $bloqueId = (int) $fila["bloque_id"];
+        if (!isset($temarios[$cursoId][$bloqueId])) {
+            $temarios[$cursoId][$bloqueId] = ["titulo" => $fila["bloque"], "lecciones" => []];
+        }
+        if ($fila["leccion_id"] !== null) {
+            $temarios[$cursoId][$bloqueId]["lecciones"][] = $fila["leccion"];
+        }
+    }
+}
 ?>
 
 <?php if (isset($mensajesSol[$msgSol])): ?>
@@ -75,6 +106,9 @@ $stmt->close();
 
     <div class="explorar-grid">
         <?php foreach ($cursos as $c): ?>
+            <?php
+            $bloquesCurso = $temarios[(int) $c["id"]] ?? [];
+            ?>
             <div class="tarjeta curso-card">
                 <div class="curso-card-cabecera">
                     <strong><?php echo htmlspecialchars($c["nombre"]); ?></strong>
@@ -90,11 +124,35 @@ $stmt->close();
                 </p>
 
                 <ul class="curso-meta">
-                    <li>👨‍🏫 <?php echo $c["ponentes"] ? htmlspecialchars($c["ponentes"]) : "Sin ponente asignado"; ?></li>
-                    <li>📅 <?php echo $c["fecha_inicio"] ? date("d/m/Y", strtotime($c["fecha_inicio"])) : "Sin fecha"; ?>
+                    <li><span class="meta-icono"><?php echo iconoInterfaz("ponente"); ?></span><?php echo $c["ponentes"] ? htmlspecialchars($c["ponentes"]) : "Sin ponente asignado"; ?></li>
+                    <li><span class="meta-icono"><?php echo iconoInterfaz("fecha"); ?></span><?php echo $c["fecha_inicio"] ? date("d/m/Y", strtotime($c["fecha_inicio"])) : "Sin fecha"; ?>
                         <?php echo $c["fecha_fin"] ? " – " . date("d/m/Y", strtotime($c["fecha_fin"])) : ""; ?></li>
-                    <li>📖 <?php echo (int) $c["lecciones"]; ?> lecciones</li>
+                    <li><span class="meta-icono"><?php echo iconoInterfaz("leccion"); ?></span><?php echo (int) $c["lecciones"]; ?> lecciones</li>
                 </ul>
+
+                <details class="curso-temario">
+                    <summary>Ver bloques y lecciones</summary>
+                    <?php if (!$bloquesCurso): ?>
+                        <p class="temario-vacio">El temario se publicará próximamente.</p>
+                    <?php else: ?>
+                        <ol class="temario-bloques">
+                            <?php foreach ($bloquesCurso as $bloque): ?>
+                                <li>
+                                    <strong><?php echo htmlspecialchars($bloque["titulo"]); ?></strong>
+                                    <?php if ($bloque["lecciones"]): ?>
+                                        <ul>
+                                            <?php foreach ($bloque["lecciones"] as $tituloLeccion): ?>
+                                                <li><?php echo htmlspecialchars($tituloLeccion); ?></li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    <?php else: ?>
+                                        <small>Lecciones por publicar</small>
+                                    <?php endif; ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ol>
+                    <?php endif; ?>
+                </details>
 
                 <?php if ($c["inscrito"]): ?>
 

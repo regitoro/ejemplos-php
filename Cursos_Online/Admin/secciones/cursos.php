@@ -23,6 +23,11 @@ $mensajes = [
     "no_aprobado"     => ["error", "El curso necesita la aprobación del administrador antes de salir de borrador."],
     "no_eliminar"     => ["error", "Solo se pueden eliminar cursos en borrador. Pide al administrador que elimine los publicados."],
     "bloqueado"       => ["error", "El curso está en revisión y no se puede editar. Retíralo de revisión si necesitas hacer cambios."],
+    "requisito_bloques" => ["error", "Agrega al menos un bloque antes de enviar o publicar el curso."],
+    "requisito_lecciones" => ["error", "Agrega al menos una lección dentro de un bloque antes de enviar o publicar el curso."],
+    "requisito_ponentes" => ["error", "Asigna al menos un ponente al curso antes de enviarlo o publicarlo."],
+    "requisito_director" => ["error", "Asigna un director al curso antes de publicarlo."],
+    "curso_borrador_requerido" => ["error", "Los cursos nuevos se crean como borrador; agrega bloques, lecciones y asignaciones antes de activarlos."],
     "error"           => ["error", "No se pudo completar la acción."],
 ];
 $msg = $_GET["msg"] ?? "";
@@ -95,7 +100,7 @@ $mostrarFormulario = $esNuevo || $curso !== null;
                            value="<?php echo htmlspecialchars($curso["fecha_fin"] ?? ""); ?>">
                 </div>
 
-                <?php if ($estadoLibre): ?>
+                <?php if ($estadoLibre && $curso): ?>
                     <div class="campo-admin">
                         <label for="estado">Estado</label>
                         <select id="estado" name="estado">

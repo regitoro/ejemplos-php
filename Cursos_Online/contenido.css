@@ -54,3 +54,13 @@
 .contenido-leccion .ql-align-center  { text-align: center; }
 .contenido-leccion .ql-align-right   { text-align: right; }
 .contenido-leccion .ql-align-justify { text-align: justify; }
+
+/* Lectura con contraste suave y detalles discretos */
+.contenido-leccion { color: #292929; font-family: "Geist", "Segoe UI", system-ui, sans-serif; }
+.contenido-leccion h1,
+.contenido-leccion h2,
+.contenido-leccion h3 { color: #171717; letter-spacing: -0.04em; text-align: left; }
+.contenido-leccion blockquote { border-left-color: #0070f3; background: #f3f7ff; color: #424a56; }
+.contenido-leccion pre { background: #17191f; box-shadow: 0 8px 24px -18px rgba(0, 0, 0, 0.55); }
+.contenido-leccion a { color: #0068e6; }
+.contenido-leccion :focus-visible { outline: 3px solid rgba(0, 112, 243, 0.3); outline-offset: 3px; }

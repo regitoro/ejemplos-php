@@ -62,7 +62,6 @@ $porcentaje = $total > 0 ? round($hechas / $total * 100) : 0;
               class="leccion <?php echo $l["completada"] ? 'hecha' : ''; ?>">
             <input type="hidden" name="subbloque_id" value="<?php echo (int) $l["id"]; ?>">
             <button type="submit" class="check" title="Marcar como completada">
-                <?php echo $l["completada"] ? "✔" : ""; ?>
             </button>
             <span><?php echo htmlspecialchars($l["titulo"]); ?></span>
         </form>

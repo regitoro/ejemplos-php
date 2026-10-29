@@ -25,6 +25,30 @@ function fechaValida(string $valor) {
     return ($d && $d->format("Y-m-d") === $valor) ? $valor : false;
 }
 
+/** Devuelve el primer requisito faltante para habilitar revisión o publicación. */
+function requisitoCursoPendiente(mysqli $conexion, int $cursoId, bool $requiereDirector): ?string
+{
+    $stmt = $conexion->prepare(
+        "SELECT c.director_id,
+                (SELECT COUNT(*) FROM bloques b WHERE b.curso_id = c.id) AS bloques,
+                (SELECT COUNT(*) FROM subbloques s
+                 INNER JOIN bloques b ON b.id = s.bloque_id
+                 WHERE b.curso_id = c.id) AS lecciones,
+                (SELECT COUNT(*) FROM curso_ponentes cp WHERE cp.curso_id = c.id) AS ponentes
+         FROM cursos c WHERE c.id = ?"
+    );
+    $stmt->bind_param("i", $cursoId);
+    $stmt->execute();
+    $curso = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    if (!$curso || (int) $curso["bloques"] < 1) return "requisito_bloques";
+    if ((int) $curso["lecciones"] < 1) return "requisito_lecciones";
+    if ((int) $curso["ponentes"] < 1) return "requisito_ponentes";
+    if ($requiereDirector && empty($curso["director_id"])) return "requisito_director";
+    return null;
+}
+
 $accion    = $_POST["accion"] ?? "";
 $id        = (int) ($_POST["id"] ?? 0);
 $msg       = "error";
@@ -54,16 +78,23 @@ if ($accion === "guardar") {
         } elseif ($rol === "director" && $estado !== "borrador" && !cursoAprobado($conexion, $id)) {
             // Un director no puede sacar de borrador un curso que no está aprobado
             $msg = "no_aprobado";
+        } elseif ($estado === "activo" && ($pendiente = requisitoCursoPendiente($conexion, $id, true)) !== null) {
+            $msg = $pendiente;
         } else {
             $stmt = $conexion->prepare(
                 "UPDATE cursos
-                 SET nombre = ?, descripcion = ?, fecha_inicio = ?, fecha_fin = ?, estado = ?
+                      SET nombre = ?, descripcion = ?, fecha_inicio = ?, fecha_fin = ?, estado = ?
                  WHERE id = ?"
             );
-            $stmt->bind_param("sssssi", $nombre, $descripcion, $inicio, $fin, $estado, $id);
+                  $stmt->bind_param("sssssi", $nombre, $descripcion, $inicio, $fin, $estado, $id);
             $msg = $stmt->execute() ? "actualizado" : "error";
             $stmt->close();
         }
+
+    } elseif ($estado !== "borrador") {
+
+        // Los cursos nuevos siempre se crean como borrador; primero hay que crear y asignar su contenido.
+        $msg = "curso_borrador_requerido";
 
     } elseif ($rol === "director") {
 
@@ -114,19 +145,9 @@ if ($accion === "guardar") {
     if ($rol !== "director" || !puedeEditarCurso($conexion, $id, $rol, $uid)) {
         $msg = "sin_permiso";
     } else {
-        // Debe tener al menos una lección
-        $stmt = $conexion->prepare(
-            "SELECT COUNT(*) AS n FROM subbloques s
-             INNER JOIN bloques b ON s.bloque_id = b.id
-             WHERE b.curso_id = ?"
-        );
-        $stmt->bind_param("i", $id);
-        $stmt->execute();
-        $lecciones = (int) $stmt->get_result()->fetch_assoc()["n"];
-        $stmt->close();
-
-        if ($lecciones === 0) {
-            $msg = "revision_vacio";
+        $pendiente = requisitoCursoPendiente($conexion, $id, false);
+        if ($pendiente !== null) {
+            $msg = $pendiente;
         } else {
             $stmt = $conexion->prepare(
                 "UPDATE cursos
@@ -164,6 +185,8 @@ if ($accion === "guardar") {
 
     if (!puedeEditarCurso($conexion, $id, $rol, $uid)) {
         $msg = "sin_permiso";
+    } elseif (($pendiente = requisitoCursoPendiente($conexion, $id, true)) !== null) {
+        $msg = $pendiente;
     } else {
         // Solo se publica un curso aprobado que siga en borrador
         $stmt = $conexion->prepare(

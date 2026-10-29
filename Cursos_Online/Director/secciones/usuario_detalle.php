@@ -72,6 +72,7 @@ $stmt->close();
     </h2>
 
     <ul class="datos-usuario">
+        <li><strong>ID</strong> <span><?php echo (int) $usuario["id"]; ?></span></li>
         <li><strong>Correo</strong> <span><?php echo htmlspecialchars($usuario["email"]); ?></span></li>
     </ul>
 </div>

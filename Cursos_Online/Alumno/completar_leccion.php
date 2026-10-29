@@ -52,6 +52,18 @@ if (!$borrada) {
     $stmt->close();
 }
 
+$completada = !$borrada;
+
+if (str_contains($_SERVER["HTTP_ACCEPT"] ?? "", "application/json")) {
+    header("Content-Type: application/json; charset=utf-8");
+    echo json_encode([
+        "ok" => true,
+        "completada" => $completada,
+        "subbloque_id" => $subbloque_id,
+    ]);
+    exit;
+}
+
 $destino = (($_POST["volver"] ?? "") === "leccion")
     ? "leccion.php?id=" . $subbloque_id
     : "curso.php?id=" . (int) $datos["curso_id"] . "#l" . $subbloque_id;
