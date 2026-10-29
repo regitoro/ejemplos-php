@@ -197,14 +197,14 @@ $mostrarFormulario = $esNuevo || $curso !== null;
                         <td><?php echo (int) $c["bloques"]; ?></td>
                         <td><?php echo (int) $c["alumnos"]; ?></td>
                         <td>
-                            <div class="acciones">
+                            <div class="acciones acciones-curso">
                                 <a href="<?php echo $panel; ?>?seccion=cursos&gestionar=<?php echo (int) $c["id"]; ?>"
                                    class="btn-principal">Gestionar</a>
                                 <a href="<?php echo $panel; ?>?seccion=cursos&editar=<?php echo (int) $c["id"]; ?>"
                                    class="btn-link">Editar</a>
 
                                 <?php if ($esAdmin || $c["estado"] === "borrador"): ?>
-                                    <form method="POST" action="acciones_cursos.php"
+                                    <form method="POST" action="acciones_cursos.php" class="form-accion-curso"
                                           onsubmit="return confirm('¿Eliminar este curso? Se borrarán también sus bloques, lecciones e inscripciones.');">
                                         <input type="hidden" name="accion" value="eliminar">
                                         <input type="hidden" name="id" value="<?php echo (int) $c["id"]; ?>">

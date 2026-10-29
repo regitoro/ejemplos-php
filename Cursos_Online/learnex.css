@@ -1,0 +1,1582 @@
+/* ==========================================================================
+   LEARNEX — DARK PRECISION THEME (OBSIDIAN STYLE SPECIFICATION)
+   Inspirado en DESIGN(1).md: Crystalline Knowledge Vault
+   Tema: Dark | Fondos: Abyss (#171717) y Surface (#1e1e1e)
+   Acento de interacción: Amethyst (#7c3aed) y Lavender (#a78bfa)
+   Elevación: 1px Inset White Glow (sin sombras tradicionales)
+   ========================================================================== */
+
+:root {
+    /* Paleta de Colores de Precisión (DESIGN(1).md) */
+    --color-white: #ffffff;
+    --color-bright-gray: #eeeeee;
+    --color-medium-gray: #bcbcbc;
+    --color-muted-gray: #a3a3a3;
+    --color-graphite: #3f3f3f;
+    --color-graphite-dark: #2a2a2a;
+    --color-surface: #1e1e1e;
+    --color-surface-hover: #262626;
+    --color-abyss: #171717;
+    
+    /* Acentos Interactivos */
+    --color-amethyst: #7c3aed;
+    --color-amethyst-hover: #6d28d9;
+    --color-amethyst-glow: rgba(124, 58, 237, 0.35);
+    --color-lavender: #a78bfa;
+    --color-tag-background: rgba(138, 92, 245, 0.15);
+    
+    /* Estados Semánticos */
+    --color-success-green: #4ade80;
+    --color-success-bg: rgba(74, 222, 128, 0.12);
+    --color-warning-yellow: #facc15;
+    --color-warning-bg: rgba(250, 204, 21, 0.12);
+    --color-error-red: #f87171;
+    --color-error-bg: rgba(248, 113, 113, 0.12);
+
+    /* Tipografía de Sistema Nativo */
+    --font-ui-sans-serif-system-ui: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+    /* Escala de Radios */
+    --radius-tags: 9999px;
+    --radius-cards: 12px;
+    --radius-inputs: 8px;
+    --radius-buttons: 8px;
+    --radius-lg: 16px;
+
+    /* Sombras & Inset Glows de Precisión */
+    --shadow-subtle: rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
+    --shadow-subtle-2: rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+    --shadow-subtle-3: rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0.25) 0px 12px 30px -5px;
+    --shadow-amethyst-glow: 0 0 24px -2px rgba(124, 58, 237, 0.45);
+    --shadow-xl: rgba(0, 0, 0, 0.4) 0px 20px 25px -5px, rgba(0, 0, 0, 0.3) 0px 8px 10px -6px;
+
+    --lx-transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   BASE & RESET
+   ========================================================================== */
+
+html.lx-html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+    background-color: var(--color-abyss);
+}
+
+body.lx-body {
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-abyss);
+    color: var(--color-bright-gray);
+    font-family: var(--font-ui-sans-serif-system-ui);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    display: block;
+}
+
+.lx-body * {
+    box-sizing: border-box;
+}
+
+.lx-body a {
+    color: inherit;
+    text-decoration: none;
+    transition: var(--lx-transition);
+}
+
+.lx-body img,
+.lx-body svg {
+    display: block;
+    max-width: 100%;
+}
+
+.lx-body button,
+.lx-body input {
+    font-family: inherit;
+}
+
+.lx-container {
+    width: 100%;
+    max-width: 1120px; /* Acorde a DESIGN(1).md: page-max-width 1120px */
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+/* ==========================================================================
+   LOGOTIPO LEARNEX (OBSIDIAN STYLE GEM / PRISM)
+   ========================================================================== */
+
+.lx-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: -0.025em;
+    color: var(--color-white);
+    user-select: none;
+}
+
+.lx-logo-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #1e1e1e 0%, #171717 100%);
+    box-shadow: var(--shadow-subtle-2), 0 0 16px rgba(124, 58, 237, 0.35);
+    border: 1px solid rgba(167, 139, 250, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-lavender);
+    flex-shrink: 0;
+    transition: var(--lx-transition);
+}
+
+.lx-brand:hover .lx-logo-mark {
+    border-color: var(--color-lavender);
+    box-shadow: var(--shadow-subtle-2), 0 0 22px rgba(124, 58, 237, 0.6);
+}
+
+.lx-brand-name {
+    display: inline-flex;
+    align-items: center;
+}
+
+.lx-brand-name .lx-dot {
+    color: var(--color-lavender);
+}
+
+/* ==========================================================================
+   BARRA DE NAVEGACIÓN
+   ========================================================================== */
+
+.lx-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(23, 23, 23, 0.88);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--color-graphite);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    transition: var(--lx-transition);
+}
+
+.lx-navbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+}
+
+.lx-navbar-inner nav {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.lx-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.lx-nav-links li {
+    display: inline-flex;
+    align-items: center;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.lx-nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-medium-gray);
+    padding: 8px 2px;
+    position: relative;
+    letter-spacing: -0.28px;
+    line-height: 1.2;
+    height: 100%;
+}
+
+.lx-nav-link:hover {
+    color: var(--color-bright-gray);
+}
+
+.lx-nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--color-lavender);
+    transition: width 0.2s ease;
+}
+
+.lx-nav-link:hover::after {
+    width: 100%;
+}
+
+/* Tag Badge estilo DESIGN(1).md */
+.lx-badge-soon {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 2px 7px;
+    background: var(--color-tag-background);
+    color: var(--color-lavender);
+    border-radius: var(--radius-tags);
+    border: 1px solid rgba(167, 139, 250, 0.25);
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.lx-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 100%;
+}
+
+/* ==========================================================================
+   BOTONES SEGÚN DESIGN(1).MD
+   ========================================================================== */
+
+.lx-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 10px 18px;
+    border-radius: var(--radius-buttons); /* 8px */
+    cursor: pointer;
+    transition: var(--lx-transition);
+    border: 1px solid transparent;
+    line-height: 1.3;
+    white-space: nowrap;
+    letter-spacing: -0.28px;
+}
+
+/* Primary CTA: Solid Amethyst (#7c3aed) + White (#ffffff) */
+.lx-btn-primary {
+    background: var(--color-amethyst);
+    color: var(--color-white) !important;
+    box-shadow: var(--shadow-subtle), 0 2px 8px rgba(124, 58, 237, 0.3);
+}
+
+.lx-btn-primary:hover {
+    background: var(--color-amethyst-hover);
+    box-shadow: var(--shadow-subtle-2), var(--shadow-amethyst-glow);
+    transform: translateY(-1px);
+}
+
+/* Secondary Ghost Button: Transparent, Medium Gray (#bcbcbc) text */
+.lx-btn-outline {
+    background: transparent;
+    color: var(--color-medium-gray) !important;
+    border: 1px solid var(--color-graphite);
+    box-shadow: var(--shadow-subtle);
+}
+
+.lx-btn-outline:hover {
+    background: var(--color-surface);
+    color: var(--color-bright-gray) !important;
+    border-color: var(--color-muted-gray);
+    box-shadow: var(--shadow-subtle-2);
+    transform: translateY(-1px);
+}
+
+.lx-btn-subtle {
+    background: transparent;
+    color: var(--color-medium-gray) !important;
+}
+
+.lx-btn-subtle:hover {
+    color: var(--color-bright-gray) !important;
+    background: var(--color-surface);
+}
+
+.lx-btn-lg {
+    padding: 14px 26px;
+    font-size: 1.05rem;
+    border-radius: var(--radius-buttons);
+}
+
+.lx-menu-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: var(--color-bright-gray);
+}
+
+/* ==========================================================================
+   HERO SECTION
+   ========================================================================== */
+
+.lx-hero {
+    position: relative;
+    padding: 84px 0 100px;
+    background: radial-gradient(circle at 15% 15%, rgba(124, 58, 237, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 85% 75%, rgba(167, 139, 250, 0.08) 0%, transparent 50%),
+                var(--color-abyss);
+}
+
+.lx-hero-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 48px;
+    align-items: center;
+}
+
+.lx-pill-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 14px;
+    background: var(--color-tag-background);
+    border: 1px solid rgba(167, 139, 250, 0.25);
+    border-radius: var(--radius-tags);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-lavender);
+    margin-bottom: 24px;
+    letter-spacing: -0.2px;
+}
+
+.lx-pill-kicker .lx-kicker-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--color-lavender);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--color-lavender);
+}
+
+.lx-hero-title {
+    font-size: 3.2rem;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -1.2px;
+    color: var(--color-bright-gray);
+    margin: 0 0 20px;
+}
+
+.lx-hero-title .lx-gradient-text {
+    background: linear-gradient(135deg, var(--color-white) 30%, var(--color-lavender) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.lx-hero-desc {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--color-medium-gray);
+    margin: 0 0 36px;
+    max-width: 540px;
+    letter-spacing: -0.32px;
+}
+
+.lx-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 40px;
+}
+
+.lx-hero-trust {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-graphite);
+}
+
+.lx-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.lx-trust-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--color-lavender);
+}
+
+.lx-trust-text {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-muted-gray);
+}
+
+/* ==========================================================================
+   HERO MOCKUP (DARK SOFTWARE SHOWCASE)
+   ========================================================================== */
+
+.lx-hero-visual {
+    position: relative;
+}
+
+.lx-mockup-wrapper {
+    position: relative;
+    padding: 16px;
+}
+
+.lx-mockup-card-main {
+    background: var(--color-surface);
+    border-radius: var(--radius-cards); /* 12px */
+    border: 1px solid var(--color-graphite);
+    box-shadow: var(--shadow-subtle-2), var(--shadow-xl);
+    padding: 26px;
+    position: relative;
+    z-index: 2;
+}
+
+.lx-card-header-badge {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.lx-category-tag {
+    font-size: 0.74rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-lavender);
+    background: var(--color-tag-background);
+    padding: 3px 10px;
+    border-radius: var(--radius-tags);
+    border: 1px solid rgba(167, 139, 250, 0.2);
+}
+
+.lx-status-live {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--color-success-green);
+}
+
+.lx-status-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--color-success-green);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--color-success-green);
+}
+
+.lx-mockup-course-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-bright-gray);
+    margin: 0 0 10px;
+    letter-spacing: -0.48px;
+}
+
+.lx-mockup-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 0.82rem;
+    color: var(--color-muted-gray);
+    margin-bottom: 22px;
+}
+
+.lx-progress-block {
+    background: #171717;
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius-inputs); /* 8px */
+    padding: 14px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow-subtle);
+}
+
+.lx-progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--color-medium-gray);
+}
+
+.lx-progress-bar-bg {
+    width: 100%;
+    height: 6px;
+    background: #2a2a2a;
+    border-radius: var(--radius-tags);
+    overflow: hidden;
+}
+
+.lx-progress-bar-fill {
+    width: 78%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-amethyst) 0%, var(--color-lavender) 100%);
+    border-radius: var(--radius-tags);
+    box-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
+}
+
+.lx-mockup-lesson-preview {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: var(--radius-inputs);
+    background: #191919;
+    border: 1px solid var(--color-graphite);
+}
+
+.lx-lesson-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-inputs);
+    background: var(--color-tag-background);
+    color: var(--color-lavender);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid rgba(167, 139, 250, 0.2);
+}
+
+.lx-lesson-info {
+    flex-grow: 1;
+}
+
+.lx-lesson-label {
+    font-size: 0.72rem;
+    color: var(--color-muted-gray);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+
+.lx-lesson-name {
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--color-bright-gray);
+}
+
+/* Chips flotantes oscuros */
+.lx-floating-chip {
+    position: absolute;
+    background: var(--color-surface);
+    border-radius: var(--radius-cards);
+    padding: 10px 16px;
+    border: 1px solid var(--color-graphite);
+    box-shadow: var(--shadow-subtle-2), var(--shadow-xl);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 3;
+    animation: lxFloat 5s ease-in-out infinite alternate;
+}
+
+.lx-chip-students {
+    top: -12px;
+    right: -8px;
+}
+
+.lx-chip-certificate {
+    bottom: -14px;
+    left: -12px;
+    animation-delay: -2.5s;
+}
+
+@keyframes lxFloat {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-8px); }
+}
+
+.lx-chip-avatar-group {
+    display: flex;
+}
+
+.lx-avatar-sm {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid var(--color-surface);
+    background: #333333;
+    color: var(--color-bright-gray);
+    font-size: 0.68rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    margin-left: -7px;
+}
+
+.lx-avatar-sm:first-child {
+    margin-left: 0;
+}
+
+.lx-chip-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-bright-gray);
+}
+
+.lx-chip-sub {
+    font-size: 0.7rem;
+    color: var(--color-muted-gray);
+}
+
+/* ==========================================================================
+   SECCIONES GENERALES
+   ========================================================================== */
+
+.lx-section {
+    padding: 96px 0; /* --section-gap: 96px */
+    position: relative;
+}
+
+.lx-section-alt {
+    background: #141414;
+    border-top: 1px solid var(--color-graphite);
+    border-bottom: 1px solid var(--color-graphite);
+}
+
+.lx-section-header {
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto 56px;
+}
+
+.lx-section-tag {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-lavender);
+    margin-bottom: 12px;
+    display: inline-block;
+    padding: 3px 10px;
+    background: var(--color-tag-background);
+    border-radius: var(--radius-tags);
+    border: 1px solid rgba(167, 139, 250, 0.2);
+}
+
+.lx-section-title {
+    font-size: 2.3rem;
+    font-weight: 700;
+    letter-spacing: -0.72px;
+    color: var(--color-bright-gray);
+    margin: 0 0 16px;
+    line-height: 1.25;
+}
+
+.lx-section-desc {
+    font-size: 1.05rem;
+    color: var(--color-medium-gray);
+    line-height: 1.6;
+    margin: 0;
+    letter-spacing: -0.32px;
+}
+
+/* ==========================================================================
+   SECCIÓN BENEFICIOS
+   ========================================================================== */
+
+.lx-benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.lx-benefit-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius-cards); /* 12px */
+    padding: 28px 24px; /* card-padding: 24px */
+    box-shadow: var(--shadow-subtle);
+    transition: var(--lx-transition);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.lx-benefit-card:hover {
+    transform: translateY(-4px);
+    background: var(--color-surface-hover);
+    border-color: rgba(167, 139, 250, 0.4);
+    box-shadow: var(--shadow-subtle-2), 0 10px 24px rgba(0, 0, 0, 0.4);
+}
+
+.lx-benefit-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-inputs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    color: var(--color-lavender);
+    background: var(--color-tag-background);
+    border: 1px solid rgba(167, 139, 250, 0.25);
+    flex-shrink: 0;
+}
+
+.lx-benefit-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--color-bright-gray);
+    margin: 0 0 10px;
+    letter-spacing: -0.36px;
+}
+
+.lx-benefit-text {
+    font-size: 0.92rem;
+    color: var(--color-medium-gray);
+    line-height: 1.55;
+    margin: 0;
+    letter-spacing: -0.28px;
+}
+
+/* ==========================================================================
+   SECCIÓN ROLES DE LA PLATAFORMA
+   ========================================================================== */
+
+.lx-roles-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.lx-role-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius-cards);
+    padding: 26px 22px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: var(--shadow-subtle);
+    transition: var(--lx-transition);
+}
+
+.lx-role-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(167, 139, 250, 0.4);
+    box-shadow: var(--shadow-subtle-2), 0 12px 28px rgba(0, 0, 0, 0.4);
+}
+
+.lx-role-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.lx-role-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-inputs);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    background: #171717;
+    border: 1px solid var(--color-graphite);
+}
+
+.lx-role-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: var(--radius-tags);
+    letter-spacing: 0.04em;
+}
+
+/* Colores temáticos por rol adaptados al dark theme */
+.lx-role-admin .lx-role-badge { background: var(--color-error-bg); color: var(--color-error-red); border: 1px solid rgba(248, 113, 113, 0.3); }
+.lx-role-director .lx-role-badge { background: var(--color-tag-background); color: var(--color-lavender); border: 1px solid rgba(167, 139, 250, 0.3); }
+.lx-role-ponente .lx-role-badge { background: rgba(56, 189, 248, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+.lx-role-alumno .lx-role-badge { background: var(--color-success-bg); color: var(--color-success-green); border: 1px solid rgba(74, 222, 128, 0.3); }
+
+.lx-role-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--color-bright-gray);
+    margin: 0 0 6px;
+    letter-spacing: -0.36px;
+}
+
+.lx-role-summary {
+    font-size: 0.85rem;
+    color: var(--color-medium-gray);
+    margin: 0 0 18px;
+    line-height: 1.5;
+}
+
+.lx-role-features {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-grow: 1;
+    border-top: 1px solid var(--color-graphite);
+    padding-top: 16px;
+}
+
+.lx-role-feature-item {
+    font-size: 0.82rem;
+    color: var(--color-medium-gray);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.4;
+}
+
+.lx-role-check {
+    width: 15px;
+    height: 15px;
+    color: var(--color-lavender);
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+/* ==========================================================================
+   SECCIÓN CÓMO FUNCIONA
+   ========================================================================== */
+
+.lx-steps-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+    position: relative;
+}
+
+.lx-step-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius-cards);
+    padding: 32px 26px;
+    position: relative;
+    box-shadow: var(--shadow-subtle);
+    transition: var(--lx-transition);
+}
+
+.lx-step-card:hover {
+    transform: translateY(-4px);
+    background: var(--color-surface-hover);
+    border-color: rgba(167, 139, 250, 0.4);
+    box-shadow: var(--shadow-subtle-2), 0 10px 24px rgba(0, 0, 0, 0.4);
+}
+
+.lx-step-number-pill {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2e2e2e;
+    line-height: 1;
+    font-feature-settings: "tnum";
+}
+
+.lx-step-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-inputs);
+    background: var(--color-amethyst);
+    color: var(--color-white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-subtle), 0 4px 12px rgba(124, 58, 237, 0.35);
+}
+
+.lx-step-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--color-bright-gray);
+    margin: 0 0 10px;
+    letter-spacing: -0.36px;
+}
+
+.lx-step-desc {
+    font-size: 0.92rem;
+    color: var(--color-medium-gray);
+    line-height: 1.55;
+    margin: 0;
+    letter-spacing: -0.28px;
+}
+
+/* ==========================================================================
+   SECCIÓN INSTITUCIONAL / MISIÓN
+   ========================================================================== */
+
+.lx-mission-box {
+    background: var(--color-surface);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius-cards);
+    padding: 56px 48px;
+    box-shadow: var(--shadow-subtle-2), var(--shadow-xl);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+}
+
+.lx-mission-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-lavender);
+    background: var(--color-tag-background);
+    padding: 3px 10px;
+    border-radius: var(--radius-tags);
+    border: 1px solid rgba(167, 139, 250, 0.25);
+    margin-bottom: 16px;
+}
+
+.lx-mission-title {
+    font-size: 2.3rem;
+    font-weight: 700;
+    color: var(--color-bright-gray);
+    margin: 0 0 18px;
+    line-height: 1.2;
+    letter-spacing: -0.72px;
+}
+
+.lx-mission-text {
+    font-size: 1.02rem;
+    line-height: 1.65;
+    color: var(--color-medium-gray);
+    margin: 0 0 24px;
+    letter-spacing: -0.32px;
+}
+
+.lx-mission-pillars {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.lx-pillar-card {
+    background: #171717;
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius-inputs);
+    padding: 18px;
+    box-shadow: var(--shadow-subtle);
+}
+
+.lx-pillar-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-bright-gray);
+    margin: 0 0 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.lx-pillar-title svg {
+    color: var(--color-lavender);
+}
+
+.lx-pillar-desc {
+    font-size: 0.82rem;
+    color: var(--color-muted-gray);
+    margin: 0;
+    line-height: 1.45;
+}
+
+/* ==========================================================================
+   CALL TO ACTION FINAL
+   ========================================================================== */
+
+.lx-cta-banner {
+    background: radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.18) 0%, transparent 70%),
+                var(--color-surface);
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius-cards);
+    padding: 64px 48px;
+    color: var(--color-white);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-subtle-2), var(--shadow-xl);
+}
+
+.lx-cta-content {
+    position: relative;
+    z-index: 2;
+    max-width: 620px;
+    margin: 0 auto;
+}
+
+.lx-cta-title {
+    font-size: 2.3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.72px;
+    margin: 0 0 16px;
+    color: var(--color-bright-gray);
+}
+
+.lx-cta-desc {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--color-medium-gray);
+    margin: 0 0 32px;
+    letter-spacing: -0.32px;
+}
+
+.lx-cta-actions {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+}
+
+.lx-btn-cta-main {
+    background: var(--color-amethyst);
+    color: var(--color-white) !important;
+    font-weight: 600;
+    padding: 14px 28px;
+    font-size: 1rem;
+    border-radius: var(--radius-buttons);
+    box-shadow: var(--shadow-subtle), var(--shadow-amethyst-glow);
+}
+
+.lx-btn-cta-main:hover {
+    background: var(--color-amethyst-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-subtle-2), 0 0 32px rgba(124, 58, 237, 0.6);
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+
+.lx-footer {
+    background: #131313;
+    border-top: 1px solid var(--color-graphite);
+    padding: 64px 0 32px;
+    margin-top: 40px;
+}
+
+.lx-footer-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 48px;
+}
+
+.lx-footer-brand-col {
+    max-width: 300px;
+}
+
+.lx-footer-tagline {
+    font-size: 0.9rem;
+    color: var(--color-muted-gray);
+    margin: 16px 0 20px;
+    line-height: 1.55;
+}
+
+.lx-footer-col-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-bright-gray);
+    margin: 0 0 18px;
+}
+
+.lx-footer-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.lx-footer-link {
+    font-size: 0.9rem;
+    color: var(--color-medium-gray);
+}
+
+.lx-footer-link:hover {
+    color: var(--color-lavender);
+}
+
+.lx-footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 24px;
+    border-top: 1px solid var(--color-graphite);
+    font-size: 0.85rem;
+    color: var(--color-muted-gray);
+}
+
+.lx-footer-bottom-links {
+    display: flex;
+    gap: 20px;
+}
+
+/* ==========================================================================
+   MÓDULO DE ACCESO / LOGIN (OBSIDIAN 2 COLUMNAS)
+   ========================================================================== */
+
+.lx-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.78);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.lx-modal-backdrop.lx-is-active {
+    display: flex;
+    opacity: 1;
+}
+
+.lx-auth-card-split {
+    background: var(--color-surface);
+    width: 100%;
+    max-width: 900px;
+    border-radius: var(--radius-cards); /* 12px */
+    overflow: hidden;
+    box-shadow: var(--shadow-subtle-2), var(--shadow-xl);
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    border: 1px solid var(--color-graphite);
+    position: relative;
+    animation: lxModalAppear 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes lxModalAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.97) translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.lx-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-inputs);
+    background: #171717;
+    border: 1px solid var(--color-graphite);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--color-medium-gray);
+    transition: var(--lx-transition);
+    z-index: 10;
+}
+
+.lx-modal-close:hover {
+    background: #262626;
+    color: var(--color-bright-gray);
+    border-color: var(--color-muted-gray);
+}
+
+/* Columna Izquierda: Promocional & Visual */
+.lx-auth-col-promo {
+    background: radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.22) 0%, transparent 60%),
+                #141414;
+    color: var(--color-white);
+    padding: 44px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    border-right: 1px solid var(--color-graphite);
+}
+
+.lx-auth-promo-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.lx-auth-promo-content {
+    margin: 32px 0;
+}
+
+.lx-auth-promo-badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: var(--color-tag-background);
+    color: var(--color-lavender);
+    border: 1px solid rgba(167, 139, 250, 0.25);
+    padding: 3px 10px;
+    border-radius: var(--radius-tags);
+    display: inline-block;
+    margin-bottom: 14px;
+}
+
+.lx-auth-promo-heading {
+    font-size: 1.65rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 0 0 12px;
+    color: var(--color-bright-gray);
+    letter-spacing: -0.56px;
+}
+
+.lx-auth-promo-desc {
+    font-size: 0.92rem;
+    color: var(--color-medium-gray);
+    line-height: 1.55;
+    margin: 0;
+}
+
+.lx-auth-promo-points {
+    list-style: none;
+    margin: 20px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.lx-auth-promo-point {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    color: var(--color-medium-gray);
+}
+
+.lx-auth-promo-point svg {
+    color: var(--color-lavender);
+    flex-shrink: 0;
+}
+
+.lx-auth-promo-quote {
+    font-size: 0.8rem;
+    color: var(--color-muted-gray);
+    border-top: 1px solid var(--color-graphite);
+    padding-top: 16px;
+    font-style: italic;
+}
+
+/* Columna Derecha: Formulario Real de Autenticación */
+.lx-auth-col-form {
+    padding: 44px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: var(--color-surface);
+}
+
+.lx-auth-form-header {
+    margin-bottom: 24px;
+}
+
+.lx-auth-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.56px;
+    color: var(--color-bright-gray);
+    margin: 0 0 6px;
+}
+
+.lx-auth-sub {
+    font-size: 0.9rem;
+    color: var(--color-medium-gray);
+    margin: 0;
+}
+
+.lx-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+}
+
+.lx-form-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-bright-gray);
+}
+
+.lx-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.lx-input-icon {
+    position: absolute;
+    left: 12px;
+    width: 18px;
+    height: 18px;
+    color: var(--color-muted-gray);
+    pointer-events: none;
+}
+
+.lx-input {
+    width: 100%;
+    padding: 11px 12px 11px 38px;
+    border: 1px solid var(--color-graphite);
+    border-radius: var(--radius-inputs); /* 8px */
+    font-size: 0.92rem;
+    color: var(--color-bright-gray);
+    background: #171717;
+    box-shadow: var(--shadow-subtle);
+    transition: var(--lx-transition);
+}
+
+.lx-input:focus {
+    outline: none;
+    border-color: var(--color-lavender);
+    box-shadow: var(--shadow-subtle-2), 0 0 14px rgba(124, 58, 237, 0.25);
+}
+
+.lx-input::placeholder {
+    color: #555555;
+}
+
+.lx-form-options {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.lx-forgot-link {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-lavender);
+}
+
+.lx-forgot-link:hover {
+    text-decoration: underline;
+    color: var(--color-white);
+}
+
+.lx-btn-auth-submit {
+    width: 100%;
+    padding: 12px;
+    font-size: 0.98rem;
+    font-weight: 600;
+    border-radius: var(--radius-buttons); /* 8px */
+    background: var(--color-amethyst);
+    color: var(--color-white);
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--shadow-subtle), 0 2px 10px rgba(124, 58, 237, 0.35);
+    transition: var(--lx-transition);
+}
+
+.lx-btn-auth-submit:hover {
+    background: var(--color-amethyst-hover);
+    box-shadow: var(--shadow-subtle-2), var(--shadow-amethyst-glow);
+    transform: translateY(-1px);
+}
+
+.lx-auth-footer {
+    text-align: center;
+    margin-top: 22px;
+    font-size: 0.88rem;
+    color: var(--color-medium-gray);
+}
+
+.lx-auth-footer a {
+    color: var(--color-lavender);
+    font-weight: 500;
+}
+
+.lx-auth-footer a:hover {
+    text-decoration: underline;
+    color: var(--color-white);
+}
+
+.lx-alert-error {
+    background: var(--color-error-bg);
+    border: 1px solid rgba(248, 113, 113, 0.35);
+    border-radius: var(--radius-inputs);
+    padding: 10px 14px;
+    color: var(--color-error-red);
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow-subtle);
+}
+
+/* Modal Legal en Dark Theme */
+.lx-modal-legal-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-graphite);
+    max-width: 520px;
+    width: 100%;
+    border-radius: var(--radius-cards);
+    padding: 30px;
+    box-shadow: var(--shadow-subtle-2), var(--shadow-xl);
+    position: relative;
+    color: var(--color-bright-gray);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (MEDIA QUERIES)
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+    .lx-hero-grid {
+        grid-template-columns: 1fr;
+        gap: 48px;
+    }
+    
+    .lx-hero-visual {
+        max-width: 520px;
+        margin: 0 auto;
+    }
+
+    .lx-benefits-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .lx-roles-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .lx-mission-box {
+        grid-template-columns: 1fr;
+        padding: 40px 32px;
+    }
+
+    .lx-footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .lx-nav-links {
+        display: none;
+    }
+
+    .lx-menu-toggle {
+        display: block;
+    }
+
+    .lx-nav-links.lx-mobile-active {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        position: absolute;
+        top: 72px;
+        left: 0;
+        right: 0;
+        background: var(--color-surface);
+        padding: 24px;
+        border-bottom: 1px solid var(--color-graphite);
+        box-shadow: var(--shadow-xl);
+        gap: 16px;
+        height: auto;
+    }
+
+    .lx-nav-links.lx-mobile-active li {
+        width: 100%;
+        height: auto;
+    }
+
+    .lx-nav-links.lx-mobile-active .lx-nav-link {
+        width: 100%;
+        justify-content: space-between;
+        height: auto;
+    }
+
+    .lx-hero-title {
+        font-size: 2.3rem;
+        letter-spacing: -0.72px;
+    }
+
+    .lx-benefits-grid,
+    .lx-roles-grid,
+    .lx-steps-container {
+        grid-template-columns: 1fr;
+    }
+
+    .lx-auth-card-split {
+        grid-template-columns: 1fr;
+    }
+
+    .lx-auth-col-promo {
+        display: none;
+    }
+
+    .lx-auth-col-form {
+        padding: 32px 22px;
+    }
+
+    .lx-mission-pillars {
+        grid-template-columns: 1fr;
+    }
+
+    .lx-cta-banner {
+        padding: 40px 22px;
+    }
+
+    .lx-cta-title {
+        font-size: 1.8rem;
+    }
+
+    .lx-footer-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .lx-footer-bottom {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+}

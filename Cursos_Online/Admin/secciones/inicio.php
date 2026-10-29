@@ -46,34 +46,70 @@ foreach ($cursos as $c) {
 }
 ?>
 
-<!-- Tarjetas -->
+<!-- Tarjetas de Resumen con Emojis Minimalistas de Representación -->
 <div class="resumen">
     <a class="tarjeta dato enlace-tarjeta" href="admin.php?seccion=usuarios">
+        <div class="tarjeta-dato-cabecera">
+            <span class="tarjeta-icono" title="Alumnos">🎓</span>
+            <span class="tarjeta-flecha">↗</span>
+        </div>
         <span class="numero"><?php echo (int) $totalAlumnos; ?></span>
         <span class="etiqueta-dato">Alumnos</span>
     </a>
+
     <a class="tarjeta dato enlace-tarjeta" href="admin.php?seccion=cursos">
+        <div class="tarjeta-dato-cabecera">
+            <span class="tarjeta-icono" title="Cursos">📚</span>
+            <span class="tarjeta-flecha">↗</span>
+        </div>
         <span class="numero"><?php echo (int) $totalCursos; ?></span>
-        <span class="etiqueta-dato">Cursos</span>
+        <span class="etiqueta-dato">Cursos totales</span>
     </a>
+
     <a class="tarjeta dato enlace-tarjeta" href="admin.php?seccion=cursos">
+        <div class="tarjeta-dato-cabecera">
+            <span class="tarjeta-icono" title="Cursos activos">⚡</span>
+            <span class="tarjeta-flecha">↗</span>
+        </div>
         <span class="numero"><?php echo (int) $cursosActivos; ?></span>
         <span class="etiqueta-dato">Cursos activos</span>
     </a>
-    <a class="tarjeta dato enlace-tarjeta" href="admin.php?seccion=usuarios">
-        <span class="numero"><?php echo (int) $pendientes; ?></span>
-        <span class="etiqueta-dato">Solicitudes pendientes</span>
+
+    <a class="tarjeta dato enlace-tarjeta" href="admin.php?seccion=calificar_ejercicios">
+        <div class="tarjeta-dato-cabecera">
+            <span class="tarjeta-icono" title="Calificar ejercicios">📝</span>
+            <span class="tarjeta-flecha">↗</span>
+        </div>
+        <span class="numero"><?php echo (int) ($ejerciciosPendientes ?? 0); ?></span>
+        <span class="etiqueta-dato">Ejercicios por calificar</span>
     </a>
-    <a class="tarjeta dato enlace-tarjeta" href="admin.php?seccion=inscripciones">
-        <span class="numero"><?php echo (int) $solPendientes; ?></span>
-        <span class="etiqueta-dato">Inscripciones pendientes</span>
-    </a>
+
     <a class="tarjeta dato enlace-tarjeta" href="admin.php?seccion=revision">
+        <div class="tarjeta-dato-cabecera">
+            <span class="tarjeta-icono" title="Cursos en revisión">🔍</span>
+            <span class="tarjeta-flecha">↗</span>
+        </div>
         <span class="numero"><?php echo (int) $cursosRevision; ?></span>
         <span class="etiqueta-dato">Cursos en revisión</span>
     </a>
 
-    
+    <a class="tarjeta dato enlace-tarjeta" href="admin.php?seccion=inscripciones">
+        <div class="tarjeta-dato-cabecera">
+            <span class="tarjeta-icono" title="Inscripciones pendientes">📥</span>
+            <span class="tarjeta-flecha">↗</span>
+        </div>
+        <span class="numero"><?php echo (int) $solPendientes; ?></span>
+        <span class="etiqueta-dato">Inscripciones pendientes</span>
+    </a>
+
+    <a class="tarjeta dato enlace-tarjeta" href="admin.php?seccion=usuarios">
+        <div class="tarjeta-dato-cabecera">
+            <span class="tarjeta-icono" title="Cuentas por aprobar">🛡️</span>
+            <span class="tarjeta-flecha">↗</span>
+        </div>
+        <span class="numero"><?php echo (int) $pendientes; ?></span>
+        <span class="etiqueta-dato">Cuentas por aprobar</span>
+    </a>
 </div>
 
 <?php if (count($cursos) === 0): ?>

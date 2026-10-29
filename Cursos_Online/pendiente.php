@@ -6,10 +6,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Cuenta pendiente</title>
+    <title>Cuenta pendiente | Learnex</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="auth-flow auth-pendiente">
 <main class="card estado-pendiente-cuenta">
     <a class="pendiente-volver" href="login.php">← Volver a iniciar sesión</a>
     <div class="pendiente-icono" aria-hidden="true">

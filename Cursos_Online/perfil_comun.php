@@ -37,7 +37,11 @@ if (!$perfil) {
     </div>
 <?php endif; ?>
 
-<div class="tarjeta">
+<section class="tarjeta perfil-tarjeta perfil-datos-tarjeta">
+    <div class="perfil-intro">
+        <span class="perfil-kicker">TU CUENTA</span>
+        <p>Consulta tus datos de acceso y mantén actualizado tu nombre.</p>
+    </div>
     <h2>
         Mis datos
         <span class="etiqueta rol-<?php echo htmlspecialchars(strtolower($perfil["rol"])); ?>">
@@ -45,13 +49,17 @@ if (!$perfil) {
         </span>
     </h2>
 
-    <ul class="datos-usuario">
-        <li><strong>ID</strong> <span><?php echo (int) $perfil["id"]; ?></span></li>
+    <ul class="datos-usuario perfil-datos-lista">
+        <li><strong>ID</strong> <span class="perfil-valor-id"><?php echo (int) $perfil["id"]; ?></span></li>
         <li><strong>Correo</strong> <span><?php echo htmlspecialchars($perfil["email"]); ?></span></li>
     </ul>
 
-    <form method="POST" action="../acciones_perfil.php" class="formulario estrecho">
+    <form method="POST" action="../acciones_perfil.php" class="formulario estrecho perfil-formulario perfil-form-nombre">
         <input type="hidden" name="accion" value="nombre">
+        <div class="perfil-form-intro">
+            <strong>Nombre para mostrar</strong>
+            <span>Este nombre aparecerá en tu perfil y actividad.</span>
+        </div>
         <div class="campo-admin">
             <label for="nombre">Nombre</label>
             <input type="text" id="nombre" name="nombre" maxlength="100" required
@@ -62,12 +70,19 @@ if (!$perfil) {
             <button type="submit" class="btn-principal">Guardar nombre</button>
         </div>
     </form>
-</div>
+</section>
 
-<div class="tarjeta">
-    <h2>Cambiar contraseña</h2>
+<section class="tarjeta perfil-tarjeta perfil-seguridad-tarjeta">
+    <div class="perfil-cabecera-seguridad">
+        <span class="perfil-icono-seguridad" aria-hidden="true">⌑</span>
+        <div>
+            <span class="perfil-kicker">SEGURIDAD</span>
+            <h2>Cambiar contraseña</h2>
+            <p>Elige una contraseña segura que no uses en otros sitios.</p>
+        </div>
+    </div>
 
-    <form method="POST" action="../acciones_perfil.php" class="formulario estrecho">
+    <form method="POST" action="../acciones_perfil.php" class="formulario estrecho perfil-formulario">
         <input type="hidden" name="accion" value="password">
 
         <div class="campo-admin">
@@ -87,4 +102,4 @@ if (!$perfil) {
             <button type="submit" class="btn-principal">Cambiar contraseña</button>
         </div>
     </form>
-</div>
+</section>

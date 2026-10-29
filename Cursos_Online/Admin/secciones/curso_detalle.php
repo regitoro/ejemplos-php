@@ -258,7 +258,7 @@ function botonesMover(string $tipo, int $id): void {
 
 
 <!-- Revisión y publicación -->
-<div class="tarjeta">
+<div class="tarjeta panel-curso-revision">
     <h2>
         Revisión y publicación
         <span class="etiqueta <?php echo $revClase; ?>"><?php echo $revTexto; ?></span>
@@ -375,7 +375,7 @@ function botonesMover(string $tipo, int $id): void {
 
 <?php if ($esAdmin): ?>
 <!-- Director del curso (solo uno por curso) -->
-<div class="tarjeta">
+<div class="tarjeta panel-asignacion panel-director">
     <h2>Director</h2>
 
     <?php if (count($directores) === 0): ?>
@@ -407,7 +407,7 @@ function botonesMover(string $tipo, int $id): void {
 
 <?php if (!$esPonente): ?>
 <!-- Ponentes del curso -->
-<div class="tarjeta">
+<div class="tarjeta panel-asignacion panel-ponentes">
     <h2>Ponentes</h2>
 
     <?php if (count($ponentes) === 0): ?>
@@ -456,7 +456,7 @@ function botonesMover(string $tipo, int $id): void {
 <?php endif; ?>
 
 <!-- Alumnos del curso -->
-<div class="tarjeta">
+<div class="tarjeta panel-asignacion panel-alumnos">
     <h2>Alumnos <span class="contador"><?php echo count($alumnos); ?></span></h2>
 
     <?php if (count($alumnos) === 0): ?>
@@ -538,7 +538,7 @@ function botonesMover(string $tipo, int $id): void {
 
 
 
-<div class="tarjeta">
+<div class="tarjeta panel-estructura">
     <h2>
         <?php echo htmlspecialchars($curso["nombre"]); ?>
         <span class="etiqueta estado-<?php echo htmlspecialchars($curso["estado"]); ?>">
@@ -581,7 +581,7 @@ function botonesMover(string $tipo, int $id): void {
 <?php endif; ?>
 
 <?php foreach ($bloques as $indiceBloque => $b): ?>
-    <div class="tarjeta bloque">
+    <div class="tarjeta bloque tarjeta-bloque">
 
         <!-- Cabecera del bloque -->
         <div class="fila-item bloque-cabecera">
@@ -674,7 +674,7 @@ function botonesMover(string $tipo, int $id): void {
 
 
 <!-- Ejercicios del curso -->
-<div class="tarjeta ejercicios-admin">
+<div class="tarjeta ejercicios-admin panel-ejercicios">
     <h2>Ejercicios <span class="contador"><?php echo count($ejerciciosCurso); ?></span></h2>
     <p>Asigna cada ejercicio a un bloque. Las preguntas de opción múltiple se califican automáticamente; las respuestas abiertas las revisa el equipo docente.</p>
 

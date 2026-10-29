@@ -66,14 +66,23 @@ if (!isset($secciones[$seccion])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Panel del director</title>
+    <title>Panel Director | Learnex</title>
     <link rel="stylesheet" href="../Admin/admin.css">
 </head>
 <body>
 <div class="layout">
 
     <aside class="sidebar">
-        <div class="logo">Cursos Online</div>
+        <a href="director.php?seccion=inicio" class="logo">
+            <span class="logo-mark">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M4 4.5V18C4 19.38 5.12 20.5 6.5 20.5H19.5" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M10 8L18 16" stroke="#a78bfa" stroke-width="2.4" stroke-linecap="round"/>
+                    <path d="M18 8L10 16" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"/>
+                </svg>
+            </span>
+            <span class="logo-texto">Learnex<span class="logo-dot">.</span></span>
+        </a>
 
         <nav class="menu-lateral">
             <?php foreach ($secciones as $clave => [$texto, $icono]): ?>

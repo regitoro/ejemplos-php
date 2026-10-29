@@ -88,10 +88,10 @@ if (!$tokenValido && !$exito && $mensaje === "") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Nueva contraseña</title>
+    <title>Nueva contraseña | Learnex</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="auth-flow auth-restablecer">
 <main class="card recuperacion-card">
     <a class="recuperacion-volver" href="login.php">← Volver a iniciar sesión</a>
     <div class="recuperacion-icono" aria-hidden="true">•••</div>

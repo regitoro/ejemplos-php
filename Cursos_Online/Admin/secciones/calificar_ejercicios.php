@@ -102,14 +102,14 @@ $msgCalificar = $_GET["msg"] ?? "";
 
             <section class="datos-alumno-calificacion">
                 <div class="datos-alumno-avatar" aria-hidden="true"><?php echo htmlspecialchars(mb_strtoupper(mb_substr($entregaActiva["alumno"], 0, 1, "UTF-8"), "UTF-8")); ?></div>
-                <div>
+                <div class="datos-alumno-identidad">
                     <span class="revision-contexto">Información del alumno</span>
                     <strong><?php echo htmlspecialchars($entregaActiva["alumno"]); ?></strong>
                     <span><?php echo htmlspecialchars($entregaActiva["correo"]); ?></span>
                 </div>
                 <dl>
-                    <div><dt>ID de usuario</dt><dd><?php echo (int) $entregaActiva["alumno_id"]; ?></dd></div>
-                    <div><dt>Rol</dt><dd><?php echo htmlspecialchars($entregaActiva["rol_alumno"]); ?></dd></div>
+                    <div class="dato-alumno"><dt>ID de usuario</dt><dd><?php echo (int) $entregaActiva["alumno_id"]; ?></dd></div>
+                    <div class="dato-alumno"><dt>Rol</dt><dd><?php echo htmlspecialchars($entregaActiva["rol_alumno"]); ?></dd></div>
                 </dl>
             </section>
 
@@ -127,9 +127,9 @@ $msgCalificar = $_GET["msg"] ?? "";
                 <input type="hidden" name="csrf" value="<?php echo htmlspecialchars($_SESSION["csrf_ejercicios"] ?? ""); ?>">
                 <input type="hidden" name="entrega_id" value="<?php echo (int) $entregaActiva["entrega_id"]; ?>">
                 <input type="hidden" name="revisar" value="<?php echo (int) $entregaActiva["entrega_id"]; ?>">
-                <label for="puntos-activos">Calificación <span>Máximo <?php echo number_format((float) $entregaActiva["puntuacion_maxima"], 2); ?> puntos</span></label>
+                <label for="puntos-activos">Calificación <span>Máximo: <?php echo number_format((float) $entregaActiva["puntuacion_maxima"], 2); ?> puntos</span></label>
                 <input id="puntos-activos" type="number" name="puntuacion" min="0" max="<?php echo htmlspecialchars((string) $entregaActiva["puntuacion_maxima"]); ?>" step="0.01" required autofocus>
-                <label for="comentario-activo">Retroalimentación <span>Visible para el alumno</span></label>
+                <label for="comentario-activo">Retroalimentación <span>Este comentario será visible para el alumno</span></label>
                 <textarea id="comentario-activo" name="comentario" maxlength="5000" rows="5" placeholder="Escribe observaciones concretas y recomendaciones para mejorar…"></textarea>
                 <div class="revision-acciones">
                     <a class="btn-link" href="<?php echo $urlPanel; ?>?seccion=calificar_ejercicios">← Volver a la lista</a>
@@ -150,7 +150,7 @@ $msgCalificar = $_GET["msg"] ?? "";
                 <span class="contador"><?php echo count($grupoCurso["pendientes"]) + count($grupoCurso["calificadas"]); ?> entregas</span>
             </h2>
 
-            <details class="grupo-entregas" open>
+            <details class="grupo-entregas">
                 <summary>
                     Pendientes de calificar
                     <span class="etiqueta no"><?php echo count($grupoCurso["pendientes"]); ?></span>

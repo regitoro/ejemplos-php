@@ -70,16 +70,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Registro de alumnos</title>
+    <title>Registro de alumnos | Learnex</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="auth-flow auth-registro">
 <main class="card">
     <h1>Registro de alumnos</h1>
 
     <?php if (!$registrado): ?>
 
-        <p class="subtitulo">Crea tu cuenta para entrar a Cursos Online</p>
+        <p class="subtitulo">Crea tu cuenta para entrar a Learnex</p>
         <form method="POST">
             <div class="campo">
                 <label for="nombre">Nombre</label>

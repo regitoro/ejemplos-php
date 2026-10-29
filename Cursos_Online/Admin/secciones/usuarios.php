@@ -38,11 +38,18 @@ $pendientes = $conexion->query(
     </div>
 <?php endif; ?>
 
-<div class="tarjeta">
-    <details class="editar">
-        <summary>+ Crear usuario</summary>
+<div class="tarjeta tarjeta-crear-usuario">
+    <details class="editar bloque-crear-usuario">
+        <summary>
+            <span class="crear-usuario-icono" aria-hidden="true">+</span>
+            <span class="crear-usuario-titulo">
+                <strong>Crear usuario</strong>
+                <small>Registra una cuenta y asigna su rol de acceso.</small>
+            </span>
+            <span class="crear-usuario-indicacion">Abrir formulario <span aria-hidden="true">⌄</span></span>
+        </summary>
 
-        <form method="POST" action="../acciones_usuarios.php" class="formulario estrecho">
+        <form method="POST" action="../acciones_usuarios.php" class="formulario estrecho formulario-crear-usuario">
             <input type="hidden" name="accion" value="crear">
 
             <div class="campo-admin">

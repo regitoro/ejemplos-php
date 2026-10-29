@@ -100,7 +100,7 @@
     overflow: hidden;
 }
 
-.curso-meta { list-style: none; display: flex; flex-direction: column; gap: 4px; font-size: 0.9rem; color: #4b5563; }
+.curso-meta { list-style: none; display: flex; flex-direction: column; gap: 4px; font-size: 0.9rem; color: #a9b1bb; }
 
 .curso-card .btn-principal { align-self: flex-start; }
 .no-inscrito { font-size: 0.85rem; color: #9ca3af; }
@@ -143,7 +143,12 @@
 /* ---------- Ejercicios y calificaciones ---------- */
 .ejercicios-alumno { margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb; }
 .ejercicios-alumno > h2 { margin: 0 0 16px; }
-.ejercicios-alumno-lista { display: grid; gap: 16px; }
+.ejercicios-alumno-lista { display: grid; gap: 16px; margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem; /* Separación entre cada ejercicio */
+    padding: 0 0.5rem 0.5rem 0.5rem;}
+
 .ejercicio-alumno { padding: 18px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; }
 .ejercicio-alumno-cabecera { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
 .ejercicio-alumno-cabecera h3 { font-size: 1.1rem; }
@@ -309,7 +314,10 @@ body.curso-app {
 
 /* Ejercicios del curso: navegación desplegable por bloque y actividad */
 .ejercicios-bloque > summary,
-.ejercicio-acordeon > summary { list-style: none; }
+.ejercicio-acordeon > summary { list-style: none; border-radius: 10px; /* Bordes redondeados */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Borde sutil */
+    background-color: rgba(255, 255, 255, 0.03); /* Fondo diferenciado */
+    overflow: hidden; /* Mantiene el contenido dentro de los bordes redondeados */}
 .ejercicios-bloque > summary::-webkit-details-marker,
 .ejercicio-acordeon > summary::-webkit-details-marker { display: none; }
 .ejercicios-bloque-cabecera { cursor: pointer; user-select: none; transition: background-color .16s ease; }
@@ -318,12 +326,18 @@ body.curso-app {
 .ejercicios-flecha { display: inline-flex; width: 28px; height: 28px; align-items: center; justify-content: center; border: 1px solid #e1e6ed; border-radius: 8px; color: #475569; background: #fff; font-size: 1.15rem; line-height: 1; transition: transform .18s ease, background-color .18s ease; }
 .ejercicios-bloque[open] > .ejercicios-bloque-cabecera .ejercicios-flecha,
 .ejercicio-acordeon[open] > .ejercicio-acordeon-cabecera .ejercicios-flecha { transform: rotate(180deg); background: #eff6ff; }
+/* Quita las esquinas inferiores redondeadas a la cabecera cuando el ejercicio se despliega */
+.ejercicio-acordeon[open] .ejercicio-acordeon-cabecera {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
 .ejercicio-acordeon { border-bottom: 1px solid #ededed; }
-.ejercicio-acordeon:last-child { border-bottom: 0; }
-.ejercicio-acordeon-cabecera { display: flex; min-height: 60px; align-items: center; gap: 12px; padding: 12px 4px; cursor: pointer; transition: color .15s ease; }
+.ejercicio-acordeon:last-child { border-bottom: 0; margin-bottom: 10px;}
+.ejercicio-acordeon-cabecera { display: flex; min-height: 60px; align-items: center; gap: 12px; padding: 12px 4px; cursor: pointer; transition: color .15s ease; border-radius: 10px;
+    padding: 0.85rem 1rem;}
 .ejercicio-acordeon-cabecera:hover { color: #0059c7; }
 .ejercicio-acordeon-cabecera > strong { flex: 1; color: #27272a; font-size: .96rem; font-weight: 650; }
-.estado-resumen-ejercicio { padding: 5px 9px; border-radius: 999px; font-size: .72rem; font-weight: 650; text-align: center; }
+.estado-resumen-ejercicio { padding: 5px 9px; border-radius: 999px; font-size: .80rem; font-weight: 650; text-align: center; }
 .estado-resumen-ejercicio.pendiente { color: #475569; background: #f1f5f9; }
 .estado-resumen-ejercicio.enviado { color: #92400e; background: #fff7ed; }
 .estado-resumen-ejercicio.calificado { color: #166534; background: #dcfce7; }
@@ -443,3 +457,179 @@ body.curso-app {
     .certificado-detalle-superior,
     .certificado-detalle-inferior { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }
+
+/* Paleta Obsidian Dark de DESIGN(1).md, limitada al aula del curso.
+   Solo cambia color, fondo, borde, acento y sombras; conserva el layout existente. */
+body.curso-app {
+    color-scheme: dark;
+    --aula-abyss: #171717;
+    --aula-surface: #1e1e1e;
+    --aula-surface-hover: #262626;
+    --aula-graphite: #3f3f3f;
+    --aula-graphite-dark: #282828;
+    --aula-graphite-light: #4a4a4a;
+    --aula-white: #ffffff;
+    --aula-bright: #eeeeee;
+    --aula-medium: #bcbcbc;
+    --aula-muted: #a3a3a3;
+    --aula-amethyst: #7c3aed;
+    --aula-amethyst-hover: #6d28d9;
+    --aula-lavender: #a78bfa;
+    --aula-tag: rgba(138, 92, 245, 0.15);
+    --aula-success: #4ade80;
+    --aula-success-bg: rgba(74, 222, 128, 0.12);
+    --aula-warning: #facc15;
+    --aula-warning-bg: rgba(250, 204, 21, 0.12);
+    --aula-error: #f87171;
+    --aula-error-bg: rgba(248, 113, 113, 0.12);
+    background-color: var(--aula-abyss);
+    color: var(--aula-bright);
+}
+
+body.curso-app .curso-pagina,
+body.curso-app .curso-pagina p { color: var(--aula-medium); }
+body.curso-app .curso-pagina h1,
+body.curso-app .curso-pagina h2,
+body.curso-app .curso-pagina h3,
+body.curso-app .curso-pagina h4,
+body.curso-app .curso-pagina strong { color: var(--aula-bright); }
+body.curso-app .curso-pagina > .al-volver,
+body.curso-app .curso-pagina > .al-volver:hover,
+body.curso-app .curso-continuar,
+body.curso-app .leccion-curso-enlace:hover .leccion-curso-titulo,
+body.curso-app .ejercicio-acordeon-cabecera:hover { color: var(--aula-lavender); }
+
+body.curso-app .curso-portada,
+body.curso-app .curso-progreso-panel,
+body.curso-app .curso-contenido,
+body.curso-app .curso-ejercicios-seccion,
+body.curso-app .ejercicio-alumno,
+body.curso-app .certificado-no-disponible {
+    border-color: var(--aula-graphite);
+    background-color: var(--aula-surface);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 16px 36px -8px rgba(0, 0, 0, 0.45);
+}
+body.curso-app .curso-portada { background-image: linear-gradient(125deg, #1e1e1e 20%, #202020 100%); }
+body.curso-app .curso-portada::after {
+    border-color: rgba(167, 139, 250, 0.16);
+    box-shadow: 0 0 0 34px rgba(124, 58, 237, 0.035), 0 0 0 72px rgba(124, 58, 237, 0.025);
+}
+body.curso-app .curso-kicker,
+body.curso-app .curso-dato-etiqueta,
+body.curso-app .curso-progreso-pie,
+body.curso-app .curso-estado-actualizacion,
+body.curso-app .curso-bloque-info > span,
+body.curso-app .leccion-curso-accion,
+body.curso-app .resultado-curso-contenido > p,
+body.curso-app .resultado-curso-calificacion span { color: var(--aula-muted); }
+body.curso-app .curso-titulo-fila h1,
+body.curso-app .curso-dato-rapido strong,
+body.curso-app .curso-progreso-cabecera h2,
+body.curso-app .curso-seccion-cabecera h2,
+body.curso-app .curso-bloque-info h3,
+body.curso-app .leccion-curso-enlace,
+body.curso-app .curso-pagina > .al-volver { color: var(--aula-bright); }
+body.curso-app .curso-portada-descripcion { color: var(--aula-medium); }
+body.curso-app .curso-datos-rapidos,
+body.curso-app .curso-bloque,
+body.curso-app .ejercicios-bloque,
+body.curso-app .ejercicio-acordeon,
+body.curso-app .curso-vacio { border-color: var(--aula-graphite); }
+body.curso-app .curso-vacio { color: var(--aula-muted); }
+body.curso-app .etiqueta.estado-activo { color: var(--aula-success); border-color: rgba(74, 222, 128, 0.3); background-color: var(--aula-success-bg); }
+body.curso-app .etiqueta.estado-borrador { color: var(--aula-warning); border-color: rgba(250, 204, 21, 0.3); background-color: var(--aula-warning-bg); }
+body.curso-app .etiqueta.estado-finalizado { color: var(--aula-muted); border-color: var(--aula-graphite); background-color: var(--aula-surface-hover); }
+
+body.curso-app .curso-progreso-porcentaje,
+body.curso-app .curso-conteo,
+body.curso-app .curso-bloque-numero,
+body.curso-app .resultado-curso-icono,
+body.curso-app .resultado-curso-calificacion,
+body.curso-app .ejercicios-bloque-resumen,
+body.curso-app .ejercicios-flecha,
+body.curso-app .ejercicio-acordeon-cabecera:hover { color: var(--aula-lavender); }
+body.curso-app .curso-conteo,
+body.curso-app .curso-bloque-numero,
+body.curso-app .resultado-curso-icono { background-color: var(--aula-tag); }
+body.curso-app .curso-barra-progreso { background-color: var(--aula-graphite-dark); }
+body.curso-app .curso-barra-progreso > div { background-image: linear-gradient(90deg, var(--aula-amethyst), var(--aula-lavender)); }
+body.curso-app .curso-completado,
+body.curso-app .leccion-curso.hecha .leccion-curso-badge { color: var(--aula-success); }
+body.curso-app .curso-bloque-cabecera,
+body.curso-app .ejercicios-bloque-cabecera,
+body.curso-app .ejercicio-acordeon-cabecera { background-color: var(--aula-abyss); }
+body.curso-app .curso-bloque-estado { color: var(--aula-medium); background-color: var(--aula-surface-hover); }
+body.curso-app .leccion-curso { border-bottom-color: var(--aula-graphite-dark); }
+body.curso-app .check.check-curso { border-color: var(--aula-graphite-light, #4a4a4a); background-color: var(--aula-abyss); }
+body.curso-app .check.check-curso:hover { border-color: var(--aula-success); background-color: var(--aula-success-bg); }
+body.curso-app .leccion-curso.hecha .check.check-curso { border-color: var(--aula-success); background-color: #16803c; }
+body.curso-app .leccion-curso.hecha .leccion-curso-titulo { color: var(--aula-muted); }
+
+body.curso-app .ejercicio-alumno-cabecera span,
+body.curso-app .ejercicio-instrucciones,
+body.curso-app .opciones-respuesta-alumno legend,
+body.curso-app .respuesta-alumno p,
+body.curso-app .resultado-ejercicio p { color: var(--aula-medium); }
+body.curso-app .ejercicio-alumno-cabecera h4 { color: var(--aula-bright); }
+body.curso-app .tipo-ejercicio-etiqueta,
+body.curso-app .ejercicios-flecha { border-color: rgba(167, 139, 250, 0.28); background-color: var(--aula-tag); }
+body.curso-app .opcion-respuesta-alumno,
+body.curso-app .respuesta-alumno { border-color: var(--aula-graphite); background-color: var(--aula-abyss); }
+body.curso-app .opcion-respuesta-alumno:hover,
+body.curso-app .ejercicios-bloque-cabecera:hover { border-color: var(--aula-lavender); background-color: var(--aula-surface-hover); }
+body.curso-app .opcion-respuesta-letra { color: var(--aula-lavender); background-color: var(--aula-surface-hover); }
+body.curso-app .opcion-respuesta-alumno input { accent-color: var(--aula-amethyst); }
+body.curso-app .ejercicio-pendiente,
+body.curso-app .resultado-curso-no-aprobado { color: var(--aula-warning) !important; }
+body.curso-app .resultado-ejercicio,
+body.curso-app .resultado-automatico { border-color: rgba(167, 139, 250, 0.22); background-color: var(--aula-tag); }
+body.curso-app .resultado-ejercicio span { color: var(--aula-lavender); }
+body.curso-app .aviso-ejercicio.ok { color: var(--aula-success); background-color: var(--aula-success-bg); }
+body.curso-app .aviso-ejercicio.error { color: var(--aula-error); background-color: var(--aula-error-bg); }
+body.curso-app .estado-resumen-ejercicio.pendiente,
+body.curso-app .estado-resumen-ejercicio.cerrado { color: var(--aula-muted); background-color: var(--aula-surface-hover); }
+body.curso-app .estado-resumen-ejercicio.enviado { color: var(--aula-warning); background-color: var(--aula-warning-bg); }
+body.curso-app .estado-resumen-ejercicio.calificado { color: var(--aula-success); background-color: var(--aula-success-bg); }
+
+body.curso-app .resultado-curso {
+    border-color: var(--aula-graphite);
+    background-image: linear-gradient(135deg, #1e1e1e, #202020);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 16px 36px -8px rgba(0, 0, 0, 0.45);
+}
+body.curso-app .resultado-curso.resultado-aprobado { border-color: rgba(74, 222, 128, 0.3); background-image: linear-gradient(135deg, #1e1e1e, rgba(74, 222, 128, 0.08)); }
+body.curso-app .resultado-aprobado .resultado-curso-icono { color: var(--aula-success); background-color: var(--aula-success-bg); }
+body.curso-app .resultado-curso-contenido h2 { color: var(--aula-bright); }
+body.curso-app .btn-certificado,
+body.curso-app .form-entrega-ejercicio button,
+body.curso-app .btn-principal,
+body.curso-app .btn {
+    border-color: rgba(167, 139, 250, 0.35);
+    color: var(--aula-white);
+    background-color: var(--aula-amethyst);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+body.curso-app .btn-certificado:hover,
+body.curso-app .form-entrega-ejercicio button:hover,
+body.curso-app .btn-principal:hover,
+body.curso-app .btn:hover { color: var(--aula-white); background-color: var(--aula-amethyst-hover); }
+body.curso-app .btn.secundario { color: var(--aula-medium); background-color: var(--aula-surface-hover); }
+body.curso-app .btn.secundario:hover { color: var(--aula-bright); background-color: #303030; }
+body.curso-app .form-entrega-ejercicio textarea,
+body.curso-app input,
+body.curso-app select,
+body.curso-app textarea {
+    border-color: var(--aula-graphite);
+    color: var(--aula-bright);
+    background-color: var(--aula-abyss);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    accent-color: var(--aula-amethyst);
+}
+body.curso-app input:focus,
+body.curso-app select:focus,
+body.curso-app textarea:focus { border-color: var(--aula-lavender); background-color: var(--aula-abyss); box-shadow: inset 0 0 0 1px rgba(167, 139, 250, 0.35), 0 0 14px rgba(124, 58, 237, 0.2); }
+body.curso-app input::placeholder,
+body.curso-app textarea::placeholder { color: var(--aula-muted); }
+body.curso-app :focus-visible { outline-color: rgba(167, 139, 250, 0.65); }
+body.curso-app .respuesta-editar > summary { color: var(--aula-lavender); }
+body.curso-app .respuesta-editar > summary:hover { color: var(--aula-bright); }
+

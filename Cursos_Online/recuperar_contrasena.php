@@ -84,7 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 if ($guardado) {
                     $url = baseAplicacion() . "/restablecer_contrasena.php?token=" . urlencode($token);
                     $nombre = trim((string) $usuario["nombre"]);
-                    $asunto = "Restablece tu contraseña de Cursos Online";
+                    $asunto = "Restablece tu contraseña de Learnex";
                     $cuerpo = "Hola " . ($nombre !== "" ? $nombre : "") . ",\n\n"
                         . "Recibimos una solicitud para cambiar la contraseña de tu cuenta. "
                         . "Abre este enlace dentro de los próximos 45 minutos:\n\n"
@@ -94,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     if (!filter_var($remitente, FILTER_VALIDATE_EMAIL)) {
                         $remitente = "no-reply@localhost";
                     }
-                    $cabeceras = "From: Cursos Online <" . $remitente . ">\r\n"
+                    $cabeceras = "From: Learnex <" . $remitente . ">\r\n"
                         . "Content-Type: text/plain; charset=UTF-8\r\n"
                         . "X-Mailer: PHP/" . phpversion();
 
@@ -122,10 +122,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Recuperar contraseña</title>
+    <title>Recuperar contraseña | Learnex</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="auth-flow auth-recuperacion">
 <main class="card recuperacion-card">
     <a class="recuperacion-volver" href="login.php">← Volver a iniciar sesión</a>
     <div class="recuperacion-icono" aria-hidden="true">↗</div>

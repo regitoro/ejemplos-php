@@ -142,6 +142,70 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         .ql-container.ql-snow { height: auto; background: #fff; border-radius: 0 0 10px 10px; font-size: 1.05rem; }
         .ql-editor { min-height: 60vh; overflow-y: visible; line-height: 1.7; }
         .ql-editor img { max-width: 100%; height: auto; }
+
+        /* Paleta Obsidian Dark: solo colores; se conserva el layout del editor. */
+        :root {
+            color-scheme: dark;
+            --ed-abyss: #171717;
+            --ed-surface: #1e1e1e;
+            --ed-hover: #262626;
+            --ed-graphite: #3f3f3f;
+            --ed-bright: #eeeeee;
+            --ed-medium: #bcbcbc;
+            --ed-muted: #a3a3a3;
+            --ed-amethyst: #7c3aed;
+            --ed-amethyst-hover: #6d28d9;
+            --ed-lavender: #a78bfa;
+            --ed-success: #4ade80;
+            --ed-error: #f87171;
+        }
+        body { background: var(--ed-abyss); color: var(--ed-bright); }
+        .ed-barra { background: #141414; border-bottom-color: var(--ed-graphite); }
+        .ed-ruta, #estado { color: var(--ed-muted); }
+        .ed-btn { color: var(--ed-bright); }
+        .ed-primario { background: var(--ed-amethyst); color: #fff; }
+        .ed-primario:hover { background: var(--ed-amethyst-hover); }
+        .ed-suave { background: var(--ed-surface); color: var(--ed-lavender); box-shadow: inset 0 0 0 1px var(--ed-graphite); }
+        .ed-suave:hover { background: var(--ed-hover); color: var(--ed-bright); }
+        .ed-aviso.ok { background: rgba(74, 222, 128, 0.12); color: var(--ed-success); }
+        .ed-aviso.error, #estado.error { background: rgba(248, 113, 113, 0.12); color: var(--ed-error); }
+        .ed-titulo { border-color: var(--ed-graphite); background: var(--ed-surface); color: var(--ed-bright); }
+        .ed-titulo::placeholder { color: var(--ed-muted); }
+        .ed-titulo:focus { outline: none; border-color: var(--ed-lavender); box-shadow: inset 0 0 0 1px rgba(167, 139, 250, 0.35), 0 0 14px rgba(124, 58, 237, 0.2); }
+
+        .ql-toolbar.ql-snow,
+        .ql-container.ql-snow { border-color: var(--ed-graphite); background: var(--ed-surface); }
+        .ql-toolbar.ql-snow { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05); }
+        .ql-editor { color: var(--ed-bright); caret-color: var(--ed-lavender); }
+        .ql-editor.ql-blank::before { color: var(--ed-muted); }
+        .ql-snow .ql-stroke { stroke: var(--ed-medium); }
+        .ql-snow .ql-fill,
+        .ql-snow .ql-stroke.ql-fill { fill: var(--ed-medium); }
+        .ql-snow .ql-picker { color: var(--ed-medium); }
+        .ql-snow .ql-picker-options,
+        .ql-snow .ql-tooltip { border-color: var(--ed-graphite); background: var(--ed-surface); color: var(--ed-bright); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05); }
+        .ql-snow .ql-tooltip input[type="text"] { border-color: var(--ed-graphite); background: var(--ed-abyss); color: var(--ed-bright); }
+        .ql-snow .ql-tooltip a { color: var(--ed-lavender); }
+        .ql-snow .ql-toolbar button:hover,
+        .ql-snow .ql-toolbar button:focus,
+        .ql-snow .ql-toolbar button.ql-active,
+        .ql-snow .ql-toolbar .ql-picker-label:hover,
+        .ql-snow .ql-toolbar .ql-picker-label.ql-active,
+        .ql-snow .ql-toolbar .ql-picker-item:hover,
+        .ql-snow .ql-toolbar .ql-picker-item.ql-selected { color: var(--ed-lavender); }
+        .ql-snow .ql-toolbar button:hover .ql-stroke,
+        .ql-snow .ql-toolbar button:focus .ql-stroke,
+        .ql-snow .ql-toolbar button.ql-active .ql-stroke,
+        .ql-snow .ql-toolbar .ql-picker-label:hover .ql-stroke,
+        .ql-snow .ql-toolbar .ql-picker-label.ql-active .ql-stroke { stroke: var(--ed-lavender); }
+        .ql-snow .ql-toolbar button:hover .ql-fill,
+        .ql-snow .ql-toolbar button:focus .ql-fill,
+        .ql-snow .ql-toolbar button.ql-active .ql-fill { fill: var(--ed-lavender); }
+        .ql-snow .ql-toolbar .ql-picker-options .ql-picker-item { color: var(--ed-medium); }
+        .ql-snow .ql-toolbar .ql-picker-options .ql-picker-item:hover,
+        .ql-snow .ql-toolbar .ql-picker-options .ql-picker-item.ql-selected { color: var(--ed-lavender); }
+        .ql-snow .ql-tooltip::before { color: var(--ed-medium); }
+        .ql-snow .ql-tooltip[data-mode="link"]::before { color: var(--ed-medium); }
     </style>
 </head>
 <body>

@@ -69,18 +69,30 @@ $hayAtencion  = count($cambios) + count($porPublicar) + count($enRevision) > 0;
 <!-- Tarjetas -->
 <div class="resumen">
     <a class="tarjeta dato enlace-tarjeta" href="director.php?seccion=usuarios">
+        <div class="tarjeta-dato-cabecera">
+            <span class="tarjeta-emoji" aria-hidden="true">🎓</span>
+        </div>
         <span class="numero"><?php echo $totalAlumnos; ?></span>
         <span class="etiqueta-dato">Alumnos inscritos</span>
     </a>
     <a class="tarjeta dato enlace-tarjeta" href="director.php?seccion=cursos">
+        <div class="tarjeta-dato-cabecera">
+            <span class="tarjeta-emoji" aria-hidden="true">📚</span>
+        </div>
         <span class="numero"><?php echo $totalCursos; ?></span>
         <span class="etiqueta-dato">Mis cursos</span>
     </a>
     <a class="tarjeta dato enlace-tarjeta" href="director.php?seccion=cursos">
+        <div class="tarjeta-dato-cabecera">
+            <span class="tarjeta-emoji" aria-hidden="true">⚡</span>
+        </div>
         <span class="numero"><?php echo $cursosActivos; ?></span>
         <span class="etiqueta-dato">Cursos activos</span>
     </a>
     <a class="tarjeta dato enlace-tarjeta" href="director.php?seccion=inscripciones">
+        <div class="tarjeta-dato-cabecera">
+            <span class="tarjeta-emoji" aria-hidden="true">📥</span>
+        </div>
         <span class="numero"><?php echo $solicitudes; ?></span>
         <span class="etiqueta-dato">Solicitudes de inscripción</span>
     </a>
