@@ -47,9 +47,8 @@ function urlImagenPokemon(int $id): string
     return "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/{$id}.png";
 }
 
-/**
- * Devuelve los 200 Pokémon como lista de ['id' => 25, 'nombre' => 'pikachu'].
- */
+//Devuelve los 200 Pokémon como lista de ['id' => 25, 'nombre' => 'pikachu'].
+ 
 function obtenerListaPokemon(): array
 {
     $url = "https://pokeapi.co/api/v2/pokemon/?offset=0&limit=" . LIMITE_POKEMON;
