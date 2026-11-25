@@ -11,6 +11,7 @@ pokemon/
 ├── functions.php  # Funciones compartidas: llamadas a la API con caché, listas, tipos y evoluciones
 ├── style.css      # Estilos (colores por tipo, tarjetas, barras de estadísticas)
 ├── prueba.php     # Script de prueba: imprime el total y los primeros 5 Pokémon
+├── Dockerfile     # Imagen PHP 8.3 + Apache para desplegar
 └── cache/         # Respuestas JSON de la API guardadas en disco (se crea sola)
 ```
 
@@ -42,3 +43,27 @@ Abre <http://localhost:8000> en el navegador.
 También funciona copiando la carpeta a `htdocs/` en XAMPP o a `/var/www/html/` en Apache. La carpeta `cache/` debe tener permisos de escritura.
 
 > La primera carga tarda unos segundos porque se descargan la lista y los 18 tipos. Después se sirve desde `cache/`. Para forzar datos nuevos, borra los archivos de esa carpeta.
+
+### Con Docker
+
+```bash
+docker build -t pokedex .
+docker run -p 8000:80 pokedex
+```
+
+## Despliegue (URL pública)
+
+El proyecto incluye un [Dockerfile](Dockerfile) (PHP 8.3 + Apache) listo para [Render](https://render.com):
+
+1. Sube el repositorio a GitHub.
+2. En Render crea un **New → Web Service** y conecta el repositorio.
+3. En **Root Directory** escribe `ejemplos php/pokemon`. Render detecta el Dockerfile; elige el plan **Free**.
+4. Al terminar el build te da una URL `https://<nombre>.onrender.com`.
+
+Ten en cuenta:
+
+- En el plan gratis el servicio se duerme tras un rato sin visitas. La primera carga al despertar tarda entre 30 y 60 s.
+- El disco no es permanente: `cache/` se vacía en cada deploy o reinicio y se vuelve a llenar sola.
+- Apache escucha en la variable `PORT` (80 por defecto), así que el mismo Dockerfile también funciona en Railway o Fly.io.
+
+**Demo temporal desde tu computadora:** corre `php -S localhost:8000` y, en otra terminal, `cloudflared tunnel --url http://localhost:8000`. Esto genera una URL pública que funciona mientras ambos comandos sigan abiertos.
